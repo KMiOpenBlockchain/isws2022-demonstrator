@@ -1,0 +1,198 @@
+body {
+	font-family: Arial, sans-serif;
+	background: #449dc0; /*#449dc0*/
+    	background-repeat:no-repeat;
+	border: 0;
+	height: 100%;
+	margin: 0 0 40px; /* bottom = footer height */
+}
+
+.container {
+	position: relative;
+	min-height: calc(100vh - 135px); /* 135 (85 + 50) height of head (or footer?) and margin-bottom of head...? */
+	width: 1170px;
+ 	padding-right: 15px;
+ 	padding-left: 15px;
+ 	margin-right: auto;
+ 	margin-left: auto
+}
+.padbottom {
+	padding-bottom: 105px; /* set to allow for footer height */
+}
+#title_head {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 85px;
+	font: 1.25em helvetica, sans-serif;
+	color: #0b2637;
+	/*word-spacing: 20px;*/
+	padding: 12px 30px 20px 25px; /* top right bottom left */
+	background-color: white;
+	box-sizing: border-box;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+	margin-bottom: 30px;
+}
+
+#title_head a {
+	color: black;
+	text-decoration: none;
+}
+#title_head a:hover {
+	color: #4286f4;
+	text-decoration: underline;
+}
+
+#headlinks {
+	display: block;
+	margin-top: 45px;
+	bottom: 0;
+	float: right;
+	font: 0.9em helvetica, sans-serif;
+}
+#headlogo {
+	float: left;
+	margin-top: 0px;
+}
+#headlogoright {
+	float: right;
+	margin-right: 40px;
+	margin-top: -5px;
+}
+
+.privacy {
+	display: block;
+	margin-top: 8px;	
+}
+.privacy a {
+	font: 1.2em arial, helvetica, sans-serif;
+	background-color: #686868;
+	padding: 0px 5px 2px 5px;
+	border-radius: 4px;
+	color: rgba(255,255,255,0.8);
+
+}
+#title_footer {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	height: 85px; /* check #content-wrap padding-bottom if change value */
+	background-color: white;
+	font: 1em helvetica, sans-serif;
+	color: #0b2637;
+	padding-top: 20px;
+	box-sizing: border-box;
+	border-top: 1px solid #ccc;
+	box-shadow: 0px -5px 5px rgba(0,0,0,0.2);
+}
+.footlogos {
+	float: right;
+	margin-right: 30px;
+}
+.title_copy {
+	display: block;
+	position: absolute;
+	bottom: 25px;
+	font: 0.7em helvetica, sans-serif;
+	color: #333;
+	top: 30px;
+	margin: 0px 20px 0px 30px;
+}
+
+.holder {
+	position: relative;
+	width: 90%;
+	min-height: calc(100vh - 135px); /* 135 (85 + 50) height of head (or footer?) and margin-bottom of head...? */
+ 	padding-right: 15px;
+ 	padding-left: 15px;
+ 	margin-right: auto;
+ 	margin-left: auto;
+}
+
+.innerholder {
+	float:left;
+	width: 100%;
+	padding-top:20px;
+ 	padding-bottom: 105px;	
+}
+
+
+/*
+.holder {
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+	padding:20px;
+	height: 1024px;
+	border: 0;
+	box-sizing: border-box;
+}
+
+.innerholder {
+	position: relative;
+	height: 1024px;
+}
+*/
+
+.panel {
+	background: #dee6f2; /* For browsers that do not support gradients */
+	background: linear-gradient(#dee6f2,#c9d9f0); /* Standard syntax */
+	float:left;
+	width: 100%;
+	padding:10px;
+	box-sizing: border-box;
+}
+
+.clearit {
+	clear: both;
+}
+
+/*** NEW ***/
+
+.textareastyle {
+ 	width: 99.5%;
+ 	height: 140px;
+}
+
+.textareastylebig {
+ 	width: 99.5%;
+ 	height: 280px;
+}
+
+.button {
+	padding: 4px 16px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.buttonsolid {
+	padding: 4px 16px;
+	border-radius: 4px;
+	background-color: #c5a6e0;
+	cursor: pointer;
+}
+.buttonsolid:hover {
+	background-color: #9261c7;
+}
+
+.buttonmetamask {
+	padding: 4px 16px;
+	border-radius: 4px;
+	background-color: #eda551;
+	cursor: pointer;
+}
+
+.buttonmetamask:hover {
+	background-color: #f2890f;
+}
+
+.buttonlinkchain {
+	padding: 4px 16px;
+	border-radius: 4px;
+	background-color: #88b0f2;
+	cursor: pointer;
+}
+
+.buttonlinkchain:hover {
+	background-color: #598cde;
+}

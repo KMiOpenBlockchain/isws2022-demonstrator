@@ -1,0 +1,6 @@
+config.js
+*.DS_Store
+._*
+.vs
+*.pem
+.vscode
