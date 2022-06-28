@@ -490,9 +490,9 @@ async function readMerQLAnchorContract(anchor, option) {
 
 		// this is needed as the returned data object is sort of an array - despite what this code may imply.
 		const dataObj = {
-			leastSignificants: data.leastSignificants.toString(),
+			leastSignificants: parseInt(data.leastSignificants.toString()),
 			theCreationTime: data.theCreationTime.toString(),
-			theDivisor: data.theDivisor.toString(),
+			theDivisor: parseInt(data.theDivisor.toString()),
 			theIndexHashFunction: data.theIndexHashFunction.toString(),
 			theIndexType: data.theIndexType.toString(),
 			theOwner: data.theOwner.toString(),
@@ -502,7 +502,7 @@ async function readMerQLAnchorContract(anchor, option) {
 		}
 
 		// get the transaction
-		const receipt = await provider.getTransactionReceipt(anchor.transactionhash);
+		const receipt = await provider.getTransactionReceipt(anchor.transactionHash);
 		dataObj.transactionAccount = receipt.from;
 		dataObj.transactionContractAddress = receipt.contractAddress;
 
@@ -531,7 +531,7 @@ async function deployMerQLAnchorContract(anchor, options) {
 		var indexHash = anchor.indexhash;
 		var newIndexType = anchor.settings.indexType; //following lines take their values from merkleOutput too
 		var lsds = anchor.settings.lsd;
-		var div = anchor.settings.divisor;
+		var div = ""+anchor.settings.divisor; // because it needs to be a string in the smart contract, not a number.
 		var quadHashFunctionIn = anchor.settings.quadHash;
 		var treeHashFunctionIn = anchor.settings.treeHash;
 		var indexHashFunctionIn = anchor.settings.indexHash;
@@ -784,6 +784,9 @@ function enableSolidButtons() {
 	const solidLoginButton = document.querySelector("#solidLoginButton");
 	solidLoginButton.disabled=true;
 
+	const solidLogoutButton = document.querySelector("#solidLogoutButton");
+	solidLogoutButton.disabled=false;
+
 	const readFileFromSolidButton = document.querySelector("#readFileFromSolidButton");
 	readFileFromSolidButton.disabled=false;
 
@@ -832,6 +835,67 @@ function enableSolidButtons() {
 	readGranularMetadataValidationButton.disabled=false;
 
 }
+
+function disableSolidButtons() {
+
+
+	document.querySelector("#solidpod").innerHTML="";
+	const solidLogoutButton = document.querySelector("#solidLogoutButton");
+	solidLogoutButton.disabled=true;
+
+	/** Tab to connect to Solid and view files **/
+	const solidLoginButton = document.querySelector("#solidLoginButton");
+	solidLoginButton.disabled=false;
+
+	const readFileFromSolidButton = document.querySelector("#readFileFromSolidButton");
+	readFileFromSolidButton.disabled=true;
+
+	/** Tab to get Verification Metadata for some RDF Input **/
+	const saveFileDataButton = document.querySelector("#saveFileDataButton");
+	saveFileDataButton.disabled=true;
+	const readSolidDataButton = document.querySelector("#readSolidDataButton");
+	readSolidDataButton.disabled=true;
+	const storeVerificationMetadataButton = document.querySelector("#storeVerificationMetadataButton");
+	storeVerificationMetadataButton.disabled=true;
+
+	/** Tab to Anchor Verification Metadata to the Blockchain **/
+	const readVerificationMetadataButton = document.querySelector("#readVerificationMetadataButton");
+	readVerificationMetadataButton.disabled=true;
+	const saveVerificationMetadataFileButton = document.querySelector("#saveVerificationMetadataFileButton");
+	saveVerificationMetadataFileButton.disabled=true;
+	const storeAnchorMetadataButton = document.querySelector("#storeAnchorMetadataButton");
+	storeAnchorMetadataButton.disabled=true;
+
+	/** Tab to Anchor Verification Metadata to the Blockchain with a Token **/
+	const readVerificationMetadataTokenButton = document.querySelector("#readVerificationMetadataTokenButton");
+	readVerificationMetadataTokenButton.disabled=true;
+	const saveVerificationMetadataTokenFileButton = document.querySelector("#saveVerificationMetadataTokenFileButton");
+	saveVerificationMetadataTokenFileButton.disabled=true;
+	const storeAnchorMetadataTokenButton = document.querySelector("#storeAnchorMetadataTokenButton");
+	storeAnchorMetadataTokenButton.disabled=true;
+
+	/** Tab to get Granular Metadata to allow per triple/quad verification **/
+	const readAnchoredRDFInputButton = document.querySelector("#readAnchoredRDFInputButton");
+	readAnchoredRDFInputButton.disabled=true;
+	const readAnchoredMetadataButton = document.querySelector("#readAnchoredMetadataButton");
+	readAnchoredMetadataButton.disabled=true;
+	const storeGanularMetadataButton = document.querySelector("#storeGanularMetadataButton");
+	storeGanularMetadataButton.disabled=true;
+
+	/** Tab to Validate with anchored metadata **/
+	const readValidateRDFInputButton = document.querySelector("#readValidateRDFInputButton");
+	readValidateRDFInputButton.disabled=true;
+	const readAnchoredMetadataValidationButton = document.querySelector("#readAnchoredMetadataValidationButton");
+	readAnchoredMetadataValidationButton.disabled=true;
+
+	/** Tab to Validate with Granular metadata **/
+	const readValidateGranularRDFInputButton = document.querySelector("#readValidateGranularRDFInputButton");
+	readValidateGranularRDFInputButton.disabled=true;
+	const readGranularMetadataValidationButton = document.querySelector("#readGranularMetadataValidationButton");
+	readGranularMetadataValidationButton.disabled=true;
+
+}
+
 
 function clearAll() {
 
@@ -1096,6 +1160,11 @@ function initLinkchain() {
 		Inrupt.startSolidLogin();
 	};
 
+	const solidLogoutButton = document.querySelector("#solidLogoutButton");
+	solidLogoutButton.onclick = function() {
+		Inrupt.solidLogout();
+	};
+
 	const readFileFromSolidButton = document.querySelector("#readFileFromSolidButton");
 	readFileFromSolidButton.onclick = async function() {
 		try {
@@ -1153,29 +1222,31 @@ function initLinkchain() {
 
 	const storeVerificationMetadataButton = document.querySelector("#storeVerificationMetadataButton");
 	storeVerificationMetadataButton.onclick = async function() {
-		const data = document.getElementById("verificationMetadataResult").value;
-		if (data == "") {
-			alert("Please load some data into the textarea to store to solid");
-			return;
+		try {
+			const data = document.getElementById("verificationMetadataResult").value;
+			if (data == "") {
+				alert("Please load some data into the textarea to store to solid");
+				return;
+			}
+			const title =  document.getElementById("verificationMetadataTitle").value;
+			if (title == "") {
+				alert("Please give this dataset a title to use in Solid");
+				return;
+			}
+
+			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
+			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
+			const filtype = 'application/ld+json';
+			const blob = new Blob([data], { type: filtype });
+			const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
+
+			document.getElementById("verificationMetadataSolidURLResult").innerHTML = fileurl;
+			document.getElementById("verificationMetadataInputURL").value = fileurl;
+			document.getElementById("verificationMetadataTokenInputURL").value = fileurl;
+		} catch (error) {
+			console.log(error);
+			alert(error.message);
 		}
-		const title =  document.getElementById("verificationMetadataTitle").value;
-		if (title == "") {
-			alert("Please give this dataset a title to use in Solid");
-			return;
-		}
-
-		//const pathToStore = document.getElementById("PodURL").value;
-		//const fileurl = await writeDatasetToPod(pathToStore, title, data);
-
-		const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
-		const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
-		const filtype = 'application/ld+json';
-		const blob = new Blob([data], { type: filtype });
-		const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
-
-		document.getElementById("verificationMetadataSolidURLResult").innerHTML = fileurl;
-		document.getElementById("verificationMetadataInputURL").value = fileurl;
-		document.getElementById("verificationMetadataTokenInputURL").value = fileurl;
 	};
 
 	/** Tab to Anchor Verification Metadata to the Blockchain **/
@@ -1211,28 +1282,30 @@ function initLinkchain() {
 
 	const storeAnchorMetadataButton = document.querySelector("#storeAnchorMetadataButton");
 	storeAnchorMetadataButton.onclick = async function() {
-		const data = document.getElementById("anchorMetadataResult").value;
-		if (data == "") {
-			alert("Please load some data into the textarea to store to solid");
-			return;
+		try {
+			const data = document.getElementById("anchorMetadataResult").value;
+			if (data == "") {
+				alert("Please load some data into the textarea to store to solid");
+				return;
+			}
+			const title =  document.getElementById("anchorMetadataTitle").value;
+			if (title == "") {
+				alert("Please give this dataset a title to use in Solid");
+				return;
+			}
+
+			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
+			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
+			const filtype = 'application/ld+json';
+			const blob = new Blob([data], { type: filtype });
+			const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
+
+			document.getElementById("anchorMetadataSolidURLResult").innerHTML = fileurl;
+			document.getElementById("anchoredMetadataInputURL").value = fileurl;
+		} catch (error) {
+			console.log(error);
+			alert(error.message);
 		}
-		const title =  document.getElementById("anchorMetadataTitle").value;
-		if (title == "") {
-			alert("Please give this dataset a title to use in Solid");
-			return;
-		}
-
-		//const pathToStore = document.getElementById("PodURL").value;
-		//const fileurl = await writeDatasetToPod(pathToStore, title, data);
-
-		const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
-		const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
-		const filtype = 'application/ld+json';
-		const blob = new Blob([data], { type: filtype });
-		const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
-
-		document.getElementById("anchorMetadataSolidURLResult").innerHTML = fileurl;
-		document.getElementById("anchoredMetadataInputURL").value = fileurl;
 	};
 
 	/** Tab to Anchor Verification Metadata to the Blockchain with Tokens **/
@@ -1256,7 +1329,7 @@ function initLinkchain() {
 	const readVerificationMetadataTokenButton = document.querySelector("#readVerificationMetadataTokenButton");
 	readVerificationMetadataTokenButton.onclick = async function() {
 		const fileURL = document.getElementById("verificationMetadataTokenInputURL").value;
-		const file = await readFileFromPod(fileURL);
+		const file = await Inrupt.readFileFromPod(fileURL);
 
 		let reader = new FileReader();
 		reader.readAsText(file);
@@ -1268,28 +1341,30 @@ function initLinkchain() {
 
 	const storeAnchorMetadataTokenButton = document.querySelector("#storeAnchorMetadataTokenButton");
 	storeAnchorMetadataTokenButton.onclick = async function() {
-		const data = document.getElementById("anchorMetadataTokenResult").value;
-		if (data == "") {
-			alert("Please load some data into the textarea to store to solid");
-			return;
+		try {
+			const data = document.getElementById("anchorMetadataTokenResult").value;
+			if (data == "") {
+				alert("Please load some data into the textarea to store to solid");
+				return;
+			}
+			const title =  document.getElementById("anchorMetadataTokenTitle").value;
+			if (title == "") {
+				alert("Please give this dataset a title to use in Solid");
+				return;
+			}
+
+			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
+			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
+			const filtype = 'application/ld+json';
+			const blob = new Blob([data], { type: filtype });
+			const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
+
+			document.getElementById("anchorMetadataTokenSolidURLResult").innerHTML = fileurl;
+			document.getElementById("anchoredMetadataTokenInputURL").innerHTML = fileurl;
+		} catch (error) {
+			console.log(error);
+			alert(error.message);
 		}
-		const title =  document.getElementById("anchorMetadataTokenTitle").value;
-		if (title == "") {
-			alert("Please give this dataset a title to use in Solid");
-			return;
-		}
-
-		//const pathToStore = document.getElementById("PodURL").value;
-		//const fileurl = await writeDatasetToPod(pathToStore, title, data);
-
-		const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
-		const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
-		const filtype = 'application/ld+json';
-		const blob = new Blob([data], { type: filtype });
-		const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
-
-		document.getElementById("anchorMetadataTokenSolidURLResult").innerHTML = fileurl;
-		document.getElementById("anchoredMetadataTokenInputURL").value = fileurl;
 	};
 
 	/** Tab to get Granular Metadata to allow per triple/quad verification **/
@@ -1324,27 +1399,30 @@ function initLinkchain() {
 
 	const storeGanularMetadataButton = document.querySelector("#storeGanularMetadataButton");
 	storeGanularMetadataButton.onclick = async function() {
-		const data = document.getElementById("granularVerificationMetadataResult").value;
-		if (data == "") {
-			alert("Please load some data into the textarea to store to solid");
-			return;
+		try {
+			const data = document.getElementById("granularVerificationMetadataResult").value;
+			if (data == "") {
+				alert("Please load some data into the textarea to store to solid");
+				return;
+			}
+			const title =  document.getElementById("granularVerificationMetadataTitle").value;
+			if (title == "") {
+				alert("Please give this dataset a title to use in Solid");
+				return;
+			}
+
+			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
+			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
+			const filtype = 'application/ld+json';
+			const blob = new Blob([data], { type: filtype });
+
+			const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
+
+			document.getElementById("granularVerificationMetadataSolidURLResult").innerHTML = fileurl;
+		} catch (error) {
+			console.log(error);
+			alert(error.message);
 		}
-		const title =  document.getElementById("granularVerificationMetadataTitle").value;
-		if (title == "") {
-			alert("Please give this dataset a title to use in Solid");
-			return;
-		}
-
-		//const pathToStore = document.getElementById("PodURL").value;
-		//const fileurl = await writeDatasetToPod(pathToStore, title, data);
-
-		const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
-		const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
-		const filtype = 'application/ld+json';
-		const blob = new Blob([data], { type: filtype });
-		const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
-
-		document.getElementById("granularVerificationMetadataSolidURLResult").innerHTML = fileurl;
 	};
 
 	/** Tab to Validate with anchored metadata **/
@@ -1353,7 +1431,6 @@ function initLinkchain() {
 	readValidateRDFInputButton.onclick = async function() {
 		const fileURL = document.getElementById("validateRDFInputURL").value;
 		const file = await Inrupt.readFileFromPod(fileURL);
-
 		let reader = new FileReader();
 		reader.readAsText(file);
 		reader.onload = function() {
