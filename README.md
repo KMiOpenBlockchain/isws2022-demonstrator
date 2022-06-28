@@ -1,32 +1,30 @@
-# isws2022-demonstrator
- isws2022 demonstrator code
+# RDF Dataset verification using Linkchain, Ethereum and Solid
  
  Contents
  --------
  
- *   [Overview](#overview)
- *   [Linkchain RDF Verification](#linkchain)
- *   [MetaMask and the Rinkby Ethereum Testnet](#metamask)
-    *[Installing MetaMask](#metamask-install)
-    *[Working with MetaMask](#metamask-ethers)
+*   [Overview](#overview)
+*   [Linkchain RDF Verification](#linkchain-rdf-verification)
+*   [MetaMask and the Rinkby Ethereum Testnet](#metamask-and-the-rinkby-ethereum-testnet)
+      *   [Installing MetaMask](#installing-metamask)
+      *   [Working with MetaMask](#working-with-metamask)
  
- *   [Solid and the Inrupt API](#solid)
-    *[Creating an Inrupt Solid Pod](#solid-pod)
-    *[Working with the Inrupt API](#solid-api)
+*   [Solid and the Inrupt API](#solid-and-the-inrupt-api)
+      *   [Creating an Inrupt Solid Pod](#creating-an-inrupt-solid-pod)
+      *   [Working with the Inrupt API](#working-with-the-inrupt-api)
  
- *   [NFT Storage](#nftstorage)
- *   [Smart Contracts](#contracts)
-    *[MerQLAnchor Smart Contract](#merqlanchor)
-    *[RDFTokens Contract](#rdftokens)
-    *[RDFTokens Metadata Example](#nftmeta)
+*   [NFT Storage](#nft-storage)
+*   [Smart Contracts](#smart-contracts)
+      *   [MerQLAnchor Smart Contract](#merqlanchor-smart-contract)
+      *   [RDFTokens Contract](#rdftokens-contract)
+      *   [RDFTokens Metadata Example](#rdftokens-metadata-example)
  
- *   [Stepping Through the Demo](#demo)
- *   [Useful Resources](#resources)
+*   [Stepping Through the Demo](#stepping-through-the-demo)
+*   [Useful Resources](#useful-resources)
  
 * * *
  
-Overview
---------
+## Overview
  
 To assist you in your aims at the summer school, we have written a demonstrator that shows a collection of software, working together to create a client-side application that can validate RDF datasets on the blockchain using the Linkchain library.  
 Here is the overall architecture of the elements in the demo:  
@@ -35,13 +33,11 @@ We will now go through each of these elements in turn.
 
 * * *
 
-Linkchain RDF Verification
---------------------------
+## Linkchain RDF Verification
 
 * * *
 
-Metamask and the Rinkby Ethereum Testnet
-----------------------------------------
+## Metamask and the Rinkby Ethereum Testnet
 
 MetaMask (https://metamask.io/) is a free web and mobile crypto wallet that allows users to store and swap cryptocurrencies, interact with the Ethereum blockchain ecosystem, and host a growing array of decentralized applications (dApps)
 
@@ -117,8 +113,7 @@ For full details, their documentation can be found here: [https://docs.ethers.io
 
 * * *
 
-Solid and the Inrupt API
-------------------------
+## Solid and the Inrupt API
 
 Solid is a technology for organizing data, applications, and identities on the web. Solid enables richer choices for people, organizations and app developers by building on existing web standards.  
 More information can be read here: https://inrupt.com/solid/
@@ -132,15 +127,15 @@ For more information on using your Solid pod from the Inrupt podbrowser interfac
 
 ### Working with the Inrupt API
 
-Blurb goes here.....  
+We have create an separate Inrupt library, ([https://github.com/KMiOpenBlockchain/isws2022-inrupt](https://github.com/KMiOpenBlockchain/isws2022-inrupt)), that this demo uses to call Solid and read and write files. Please see the source code and speparate read me on using this library.
   
 [https://inrupt.com/products/dev-tools](https://inrupt.com/products/dev-tools)  
 [https://docs.inrupt.com/developer-tools/javascript/client-libraries/](https://docs.inrupt.com/developer-tools/javascript/client-libraries/)
 
 * * *
 
-NFT Storage ![](images/docs/nftstorage.png)
-------------------------------------------- 
+## NFT Storage
+![](images/docs/nftstorage.png)
 
 Traditionally, NFTs (Non-Fungible Tokens) use [IPFS](https://ipfs.io/) (InterPlanetary File System) to store their metadata, as it is secured with a hash. In our demo, we are using the [NFT.Storage](https://nft.storage) API to put NFT metadata onto the public IPFS network.
 
@@ -164,11 +159,10 @@ See the function _'storeToIPFS(content)'_ in _'app.js'_ in our demo source code 
 
 * * *
 
-Smart Contracts
----------------
+## Smart Contracts
 
 ### MerQLAnchor Smart Contract
-
+```
 pragma solidity ^0.5.7;
 
 contract MerQLAnchor {
@@ -228,8 +222,11 @@ contract MerQLAnchor {
 		theIndexHashFunction = indexHashFunction;
     }
 }
-		### RDFTokens Contract
+```
 
+### RDFTokens Contract
+
+```
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -262,8 +259,10 @@ contract RDFTokens is ERC721URIStorage {
         return newItemId;
     }
 }	
-		### RDFTokens Metadata Example
+```
 
+### RDFTokens Metadata Example
+```
 {
 	"name": "Test RDF Token",
 	"description": "A RDF dataset of some sort",
@@ -284,17 +283,15 @@ contract RDFTokens is ERC721URIStorage {
 		"transactionhash": "0x0x0000000000000000000000000000000000000000"
 	}
 }
-		
+```		
 
 * * *
 
-Stepping Through the Demo
--------------------------
+## Stepping Through the Demo
 
 * * *
 
-Useful Resources:
------------------
+## Useful Resources:
 
 *   [MetaMask Developer Documentation](https://docs.metamask.io/guide/)
 *   [Top up your Rinkby Eth (0.5 eth a day)](https://faucet.paradigm.xyz/)
