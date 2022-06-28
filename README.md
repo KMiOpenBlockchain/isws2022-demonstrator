@@ -35,6 +35,108 @@ We will now go through each of these elements in turn.
 
 ## Linkchain RDF Verification
 
+Main linkchain Library functions used in this demonstrator:
+
+```
+getVerificationMetadata: async function (quads, options)
+```
+
+Code snippet from ISWS 2022 Demonstrator:
+```
+try {
+  const inputarea = document.getElementById('inputarea');
+  quadsFinal = inputarea.value;
+
+  if (quadsFinal != "" && quadsFinal != null) {
+    metadata = await linkchains.getVerificationMetadata(quadsFinal, {});
+
+    const verificationMetadataResult = document.getElementById('verificationMetadataResult');
+    verificationMetadataResult.value = JSON.stringify(metadata, null, 2);
+
+    // also add to next stage for non solid workflow
+    const verificationMetadata = document.getElementById('verificationmetadatainputarea');
+    verificationMetadata.value = JSON.stringify(metadata, null, 2);
+
+    // also add to next stage for non solid workflow
+    const verificationMetadataTokenInputArea = document.getElementById('verificationMetadataTokenInputArea');
+    verificationMetadataTokenInputArea.value = JSON.stringify(metadata, null, 2);
+  } else {
+    alert("Please select a file of RDF first");
+  }
+} catch (e) {
+  console.log(e);
+}
+
+```
+
+* * *
+```
+anchorMetadata: async function (metadata, options, anchorFunction)
+```
+
+Code snippet from ISWS 2022 Demonstrator:
+```
+
+let dataToAnchor = <the rdf code that was anchored>;
+
+let options = {
+  address: cfg.tokenContractAddress,
+  account: account,
+  transactionHash:"0x0x0000000000000000000000000000000000000000",
+  anchorType : 'RDFTokens',
+  tokenName: name,
+  tokenDescription: description,
+  tokenImageURL: imageurl
+}
+
+const handler = async function(anchor, options) {
+  let reply = await issueToken(anchor, options);
+  return reply;
+}
+
+const anchoredMetadata = await linkchains.anchorMetadata(dataToAnchor, options, handler);
+
+```
+
+* * *
+```
+getGranularVerificationMetadata: async function (quads, metadata)
+```
+
+Code snippet from ISWS 2022 Demonstrator:
+```
+const rdfInputData = <the rdf code that was acnhored>
+const anchoredData = <data returned from linkchains.anchorMetadata>
+const granularMetaData = await linkchains.getGranularVerificationMetadata(rdfInputData, anchoredData);
+```
+
+* * *
+```
+verify: async function (quads, metadata, options, retrieveAnchor)
+```
+Code snippet from ISWS 2022 Demonstrator:
+```
+
+const rdfInputData = <the rdf code that was acnhored>
+const anchoredMetadata = <the data returned from a call to linkchains.anchorMetadata>
+let options = {}
+
+const handler = async function(anchor, options) {
+  // check if merkle or blockchain verification
+  let reply = "";
+  if (anchor.type == "ETHMerQL") {
+    reply = await readMerQLAnchorContract(anchor, options);
+  } else if (anchor.type == "RDFTokens") {
+    reply = await readTokenMetadata(anchor, options);
+  }
+
+  return reply;
+}
+
+const output = await linkchains.verify(rdfInputData, anchoredMetaData, options, handler);
+
+```
+
 * * *
 
 ## Metamask and the Rinkby Ethereum Testnet
