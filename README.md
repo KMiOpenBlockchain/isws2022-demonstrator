@@ -1,4 +1,4 @@
-# Documentation for RDF Dataset verification using Linkchain, Ethereum and Solid
+# RDF Dataset verification using Linkchain, Ethereum and Solid
  
  Contents
  --------
