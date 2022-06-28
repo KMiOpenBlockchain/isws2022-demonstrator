@@ -1142,7 +1142,7 @@ function initLinkchain() {
 			const file = document.getElementById('fileoftriples').files[0];
 			if (file) {
 				const filePodURL = podUrl+file.name;
-				await Inrupt.writeFileToPod(file, `${filePodURL}`, fetch);
+				await Inrupt.writeFileToPod(file, `${filePodURL}`);
 				const solidFileURLField = document.getElementById("solidFileURL").value = filePodURL;
 			}
 		} catch (error) {
@@ -1171,7 +1171,7 @@ function initLinkchain() {
 		const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
 		const filtype = 'application/ld+json';
 		const blob = new Blob([data], { type: filtype });
-		const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore, fetch);
+		const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
 
 		document.getElementById("verificationMetadataSolidURLResult").innerHTML = fileurl;
 		document.getElementById("verificationMetadataInputURL").value = fileurl;
@@ -1187,7 +1187,7 @@ function initLinkchain() {
 			const file = document.getElementById('verificationMetadataFile').files[0];
 			if (file) {
 				const filePodURL = podUrl+file.name;
-				await Inrupt.writeFileToPod(file, `${filePodURL}`, fetch);
+				await Inrupt.writeFileToPod(file, `${filePodURL}`);
 				const solidFileURLField = document.getElementById("verificationMetadataInputURL").value = filePodURL;
 			}
 		} catch (error) {
@@ -1229,7 +1229,7 @@ function initLinkchain() {
 		const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
 		const filtype = 'application/ld+json';
 		const blob = new Blob([data], { type: filtype });
-		const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore, fetch);
+		const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
 
 		document.getElementById("anchorMetadataSolidURLResult").innerHTML = fileurl;
 		document.getElementById("anchoredMetadataInputURL").value = fileurl;
@@ -1244,7 +1244,7 @@ function initLinkchain() {
 			const file = document.getElementById('verificationMetadataTokenFile').files[0];
 			if (file) {
 				const filePodURL = podUrl+file.name;
-				await Inrupt.writeFileToPod(file, `${filePodURL}`, fetch);
+				await Inrupt.writeFileToPod(file, `${filePodURL}`);
 				const solidFileURLField = document.getElementById("verificationMetadataTokenInputURL").value = filePodURL;
 			}
 		} catch (error) {
@@ -1286,7 +1286,7 @@ function initLinkchain() {
 		const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
 		const filtype = 'application/ld+json';
 		const blob = new Blob([data], { type: filtype });
-		const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore, fetch);
+		const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
 
 		document.getElementById("anchorMetadataTokenSolidURLResult").innerHTML = fileurl;
 		document.getElementById("anchoredMetadataTokenInputURL").value = fileurl;
@@ -1342,7 +1342,7 @@ function initLinkchain() {
 		const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
 		const filtype = 'application/ld+json';
 		const blob = new Blob([data], { type: filtype });
-		const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore, fetch);
+		const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
 
 		document.getElementById("granularVerificationMetadataSolidURLResult").innerHTML = fileurl;
 	};
