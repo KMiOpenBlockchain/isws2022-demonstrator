@@ -77,7 +77,7 @@ anchorMetadata: async function (metadata, options, anchorFunction)
 Code snippet from ISWS 2022 Demonstrator:
 ```
 
-let dataToAnchor = <the rdf code that was acnhored>;
+let dataToAnchor = <the rdf code that was anchored>;
 
 let options = {
   address: cfg.tokenContractAddress,
