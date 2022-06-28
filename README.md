@@ -114,7 +114,6 @@ For full details, their documentation can be found here: [https://docs.ethers.io
 * * *
 
 ## Solid and the Inrupt API
-------------------------
 
 Solid is a technology for organizing data, applications, and identities on the web. Solid enables richer choices for people, organizations and app developers by building on existing web standards.  
 More information can be read here: https://inrupt.com/solid/
