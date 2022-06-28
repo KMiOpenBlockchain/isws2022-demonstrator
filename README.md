@@ -136,7 +136,7 @@ We have create an separate Inrupt library, ([https://github.com/KMiOpenBlockchai
 * * *
 
 ## NFT Storage
-(images/docs/nftstorage.png)
+![](images/docs/nftstorage.png)
 
 Traditionally, NFTs (Non-Fungible Tokens) use [IPFS](https://ipfs.io/) (InterPlanetary File System) to store their metadata, as it is secured with a hash. In our demo, we are using the [NFT.Storage](https://nft.storage) API to put NFT metadata onto the public IPFS network.
 
@@ -261,7 +261,7 @@ contract RDFTokens is ERC721URIStorage {
 
 
 ### RDFTokens Metadata Example
-
+```
 {
 	"name": "Test RDF Token",
 	"description": "A RDF dataset of some sort",
@@ -282,7 +282,7 @@ contract RDFTokens is ERC721URIStorage {
 		"transactionhash": "0x0x0000000000000000000000000000000000000000"
 	}
 }
-		
+```		
 
 * * *
 
