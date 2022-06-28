@@ -1,5 +1,4 @@
-# isws2022-demonstrator
- isws2022 demonstrator code
+# Documentation for RDF Dataset verification using Linkchain, Ethereum and Solid
  
  Contents
  --------
