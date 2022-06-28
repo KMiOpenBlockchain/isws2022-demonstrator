@@ -7,21 +7,18 @@
  *   [Overview](#overview)
  *   [Linkchain RDF Verification](#linkchain)
  *   [MetaMask and the Rinkby Ethereum Testnet](#metamask)
- 
- *   [Installing MetaMask](#metamask-install)
- *   [Working with MetaMask](#metamask-ethers)
+ 	*   [Installing MetaMask](#metamask-install)
+ 	*   [Working with MetaMask](#metamask-ethers)
  
  *   [Solid and the Inrupt API](#solid)
- 
- *   [Creating an Inrupt Solid Pod](#solid-pod)
- *   [Working with the Inrupt API](#solid-api)
+ 	*   [Creating an Inrupt Solid Pod](#solid-pod)
+ 	*   [Working with the Inrupt API](#solid-api)
  
  *   [NFT Storage](#nftstorage)
  *   [Smart Contracts](#contracts)
- 
- *   [MerQLAnchor Smart Contract](#merqlanchor)
- *   [RDFTokens Contract](#rdftokens)
- *   [RDFTokens Metadata Example](#nftmeta)
+ 	*   [MerQLAnchor Smart Contract](#merqlanchor)
+ 	*   [RDFTokens Contract](#rdftokens)
+ 	*   [RDFTokens Metadata Example](#nftmeta)
  
  *   [Stepping Through the Demo](#demo)
  *   [Useful Resources](#resources)
