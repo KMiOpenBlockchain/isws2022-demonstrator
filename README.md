@@ -5,9 +5,9 @@
  
 *   [Overview](#overview)
 *   [Linkchain RDF Verification](#linkchain-rdf-verification)
-*   [MetaMask and the Rinkby Ethereum Testnet](#metamask)
-      *   [Installing MetaMask](#metamask-install)
-      *   [Working with MetaMask](#metamask-ethers)
+*   [MetaMask and the Rinkby Ethereum Testnet](#metamask-and-the-rinkby-ethereum-testnet)
+      *   [Installing MetaMask](#installing-metamask)
+      *   [Working with MetaMask](#working-with-metamask)
  
 *   [Solid and the Inrupt API](#solid-and-the-inrupt-api)
       *   [Creating an Inrupt Solid Pod](#creating-an-inrupt-solid-pod)
