@@ -131,7 +131,7 @@ For more information on using your Solid pod from the Inrupt podbrowser interfac
 
 ### Working with the Inrupt API
 
-Blurb goes here.....  
+We have create an separate Inrupt library, ([https://github.com/KMiOpenBlockchain/isws2022-inrupt](https://github.com/KMiOpenBlockchain/isws2022-inrupt)), that this demo uses to call Solid and read and write files. Please see the source code and speparate read me on using this library.
   
 [https://inrupt.com/products/dev-tools](https://inrupt.com/products/dev-tools)  
 [https://docs.inrupt.com/developer-tools/javascript/client-libraries/](https://docs.inrupt.com/developer-tools/javascript/client-libraries/)
@@ -227,7 +227,8 @@ contract MerQLAnchor {
 		theIndexHashFunction = indexHashFunction;
     }
 }
-		### RDFTokens Contract
+
+### RDFTokens Contract
 
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -261,7 +262,9 @@ contract RDFTokens is ERC721URIStorage {
         return newItemId;
     }
 }	
-		### RDFTokens Metadata Example
+
+
+### RDFTokens Metadata Example
 
 {
 	"name": "Test RDF Token",
