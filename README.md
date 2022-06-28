@@ -163,7 +163,7 @@ See the function _'storeToIPFS(content)'_ in _'app.js'_ in our demo source code 
 ## Smart Contracts
 
 ### MerQLAnchor Smart Contract
-
+```
 pragma solidity ^0.5.7;
 
 contract MerQLAnchor {
@@ -223,9 +223,11 @@ contract MerQLAnchor {
 		theIndexHashFunction = indexHashFunction;
     }
 }
+```
 
 ### RDFTokens Contract
 
+```
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -258,7 +260,7 @@ contract RDFTokens is ERC721URIStorage {
         return newItemId;
     }
 }	
-
+```
 
 ### RDFTokens Metadata Example
 ```
