@@ -367,7 +367,7 @@ async function createTokenMetadata(name, description, imagefilepath, merqlanchor
  // https://docs.alchemy.com/alchemy/tutorials/how-to-create-an-nft/how-to-mint-an-nft-with-ethers
 async function issueToken(anchor, options) {
 
-	const anchorMetadataResult = document.getElementById('anchorMetadataResult');
+	const anchorMetadataResult = document.getElementById('anchorMetadataTokenResult');
 
 	try {
 		let name=options.tokenName;
