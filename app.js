@@ -272,17 +272,25 @@ async function readTokenMetadata(anchor, options) {
 
 			const dataObj = {
 				leastSignificants: merqlanchor.settings.lsd,
-				theCreationTime: "",
 				theDivisor: merqlanchor.settings.divisor,
 				theIndexHashFunction: merqlanchor.settings.indexHash,
 				theIndexType: merqlanchor.settings.indexType,
-				theOwner: merqlanchor.account, // not strictly true - it will be the KMi account that owns the Token Contract - but I am not sure it matters for the summer school
 				theQuadHashFunction: merqlanchor.settings.quadHash,
 				theTreeHashFunction: merqlanchor.settings.treeHash,
 				thetargetHash: merqlanchor.indexhash,
 				transactionAccount: merqlanchor.account,
 				transactionContractAddress: merqlanchor.address
 			}
+
+			// get the transaction
+			const receipt = await provider.getTransactionReceipt(anchor.transactionHash);
+			dataObj.transactionAccount = receipt.from;
+			dataObj.theOwner = receipt.from; // not strictly true - it will be the KMi account that owns the Token Contract - but I am not sure it matters for the summer school
+			dataObj.transactionContractAddress = anchor.address;
+
+			// get the block for the timestamp
+			const block = await provider.getBlock(receipt.blockNumber);
+			dataObj.theCreationTime = block.timestamp;
 
 			tokencache[contractAddress] = {};
 			tokencache[contractAddress][anchor.tokenId] = dataObj;
