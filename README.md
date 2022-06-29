@@ -391,6 +391,8 @@ contract RDFTokens is ERC721URIStorage {
 
 ## Stepping Through the Demo
 
+[![Foo](https://blockchain7.kmi.open.ac.uk/movies/movies/iswssummerschooldemo.png)](https://blockchain7.kmi.open.ac.uk/movies/movies/iswssummerschooldemo.mp4)
+
 * * *
 
 ## Useful Resources:
