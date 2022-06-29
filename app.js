@@ -197,6 +197,7 @@ function storeToIPFS(content) {
         };
 
 		var blob = new Blob([content], {type: 'application/json'});
+
 		xhr.send(blob);
     });
 }
@@ -448,7 +449,7 @@ async function anchorMetadataWithToken() {
 		anchorMetadataResult.value = JSON.stringify(anchoredMetadata, null, 2);
 
 		// prefill the get granular metadata input area
-		const anchoredMetadataInputArea = document.getElementById('anchoredmetadatainputarea');
+		const anchoredMetadataInputArea = document.getElementById('anchoredMetadataInputArea');
 		anchoredMetadataInputArea.value = JSON.stringify(anchoredMetadata, null, 2);
 
 		// prefill the validate anchored metadata input area
@@ -601,7 +602,7 @@ async function anchorMetadata() {
 		anchorMetadataResult.value = JSON.stringify(metadata2, null, 2);
 
 		// prefill the get granular metadata input area
-		const anchoredMetadataInputArea = document.getElementById('anchoredmetadatainputarea');
+		const anchoredMetadataInputArea = document.getElementById('anchoredMetadataInputArea');
 		anchoredMetadataInputArea.value = JSON.stringify(metadata2, null, 2);
 
 		// prefill the validate anchored metadata input area
@@ -622,7 +623,7 @@ async function getGranularVerificationMetadata() {
 	const granularVerificationMetadataResult = document.getElementById('granularVerificationMetadataResult');
 
 	try {
-		const inputarea = document.getElementById('anchoredrdfinputarea');
+		const inputarea = document.getElementById('anchoredRDFInputArea');
 		let rdfInputData = "";
 		if (inputarea.value != "" && inputarea.value != null) {
 			rdfInputData = inputarea.value;
@@ -631,7 +632,7 @@ async function getGranularVerificationMetadata() {
 			return;
 		}
 
-		const anchoredMetadata = document.getElementById('anchoredmetadatainputarea');
+		const anchoredMetadata = document.getElementById('anchoredMetadataInputArea');
 		let anchoredData = "";
 		if (anchoredMetadata.value != "" && anchoredMetadata.value != null) {
 			anchoredData = anchoredMetadata.value
@@ -926,9 +927,9 @@ function clearAll() {
 
 	// Get Granular Metadata to allow per triple/quad verification
 	document.getElementById('anchoredRDFInputURL').value = "";
-	document.getElementById('anchoredrdfinputarea').value = "";
+	document.getElementById('anchoredRDFInputArea').value = "";
 	document.getElementById('anchoredMetadataInputURL').value = "";
-	document.getElementById('anchoredmetadatainputarea').value = "";
+	document.getElementById('anchoredMetadataInputArea').value = "";
 	document.getElementById('granularVerificationMetadataResult').value = "";
 	document.getElementById('granularMetadataTitle').value = "";
 	document.getElementById('granularVerificationMetadataSolidURLResult').innerHTML = "";
@@ -1048,14 +1049,49 @@ function initLinkchain() {
 		podURLInput.onchange();
 	}
 
+	// READ IN LOCAL FILES
 	const readFileDataButton = document.querySelector("#readFileDataButton");
 	readFileDataButton.onclick = function() {
-		readLocalInputData('fileoftriples', 'inputarea', ['anchoredrdfinputarea', 'validateRDFInputArea', 'validateGranularRDFInputArea']);
+		readLocalInputData('fileoftriples', 'inputarea', ['anchoredRDFInputArea', 'validateRDFInputArea', 'validateGranularRDFInputArea']);
 	};
 
 	const readVerificationMetadataFileButton = document.querySelector("#readVerificationMetadataFileButton");
 	readVerificationMetadataFileButton.onclick = async function() {
 		readLocalInputData('verificationMetadataFile', 'verificationmetadatainputarea', []);
+	};
+
+	// Granular
+	const granularRDFInputFileButton = document.querySelector("#granularRDFInputFileButton");
+	granularRDFInputFileButton.onclick = async function() {
+		readLocalInputData('granularRDFInputFile', 'anchoredRDFInputArea', []);
+	};
+
+	const anchoredMetadataInputAreaButton = document.querySelector("#anchoredMetadataInputAreaButton");
+	anchoredMetadataInputAreaButton.onclick = async function() {
+		readLocalInputData('anchoredMetadataInputAreaFile', 'anchoredMetadataInputArea', []);
+	};
+
+
+	// Validation
+	const validateRDFInputFileButton = document.querySelector("#validateRDFInputFileButton");
+	validateRDFInputFileButton.onclick = async function() {
+		readLocalInputData('validateRDFInputFile', 'validateRDFInputArea', []);
+	};
+
+	const validateAnchoredMetadataInputFileButton = document.querySelector("#validateAnchoredMetadataInputFileButton");
+	validateAnchoredMetadataInputFileButton.onclick = async function() {
+		readLocalInputData('validateAnchoredMetadataInputFile', 'anchoredMetadataValidationInputArea', []);
+	};
+
+	// Granular Validation
+	const validateGranularRDFInputButton = document.querySelector("#validateGranularRDFInputButton");
+	validateGranularRDFInputButton.onclick = async function() {
+		readLocalInputData('validateGranularRDFInputFile', 'validateGranularRDFInputArea', []);
+	};
+
+	const granularMetadataValidationInputButton = document.querySelector("#granularMetadataValidationInputButton");
+	granularMetadataValidationInputButton.onclick = async function() {
+		readLocalInputData('granularMetadataValidationInputFile', 'granularMetadataValidationInputArea', []);
 	};
 
 	const ethereumButton = document.getElementById('enableEthereumButton');
@@ -1236,9 +1272,10 @@ function initLinkchain() {
 
 			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
 			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
-			const filtype = 'application/ld+json';
-			const blob = new Blob([data], { type: filtype });
-			const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
+			const filetype = 'text/plain'; // must be this or fails - no idea why
+			const blob = new Blob([data], { type: filetype });
+			const file = new File([blob], filename, { type: filetype });
+			const fileurl = await Inrupt.writeFileToPod(file, pathToStore);
 
 			document.getElementById("verificationMetadataSolidURLResult").innerHTML = fileurl;
 			document.getElementById("verificationMetadataInputURL").value = fileurl;
@@ -1296,9 +1333,10 @@ function initLinkchain() {
 
 			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
 			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
-			const filtype = 'application/ld+json';
-			const blob = new Blob([data], { type: filtype });
-			const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
+			const filetype = 'text/plain'; // must be this or fails - no idea why
+			const blob = new Blob([data], { type: filetype });
+			const file = new File([blob], filename, { type: filetype });
+			const fileurl = await Inrupt.writeFileToPod(file, pathToStore);
 
 			document.getElementById("anchorMetadataSolidURLResult").innerHTML = fileurl;
 			document.getElementById("anchoredMetadataInputURL").value = fileurl;
@@ -1355,12 +1393,13 @@ function initLinkchain() {
 
 			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
 			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
-			const filtype = 'application/ld+json';
-			const blob = new Blob([data], { type: filtype });
-			const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
+			const filetype = 'text/plain'; // must be this or fails - no idea why
+			const blob = new Blob([data], { type: filetype });
+			const file = new File([blob], filename, { type: filetype });
+			const fileurl = await Inrupt.writeFileToPod(file, pathToStore);
 
 			document.getElementById("anchorMetadataTokenSolidURLResult").innerHTML = fileurl;
-			document.getElementById("anchoredMetadataTokenInputURL").innerHTML = fileurl;
+			document.getElementById("anchoredMetadataInputURL").value = fileurl;
 		} catch (error) {
 			console.log(error);
 			alert(error.message);
@@ -1378,7 +1417,7 @@ function initLinkchain() {
 		let reader = new FileReader();
 		reader.readAsText(file);
 		reader.onload = function() {
-			const inputarea = document.getElementById('anchoredrdfinputarea');
+			const inputarea = document.getElementById('anchoredRDFInputArea');
 			inputarea.value = reader.result;
 		};
 	}
@@ -1392,7 +1431,7 @@ function initLinkchain() {
 		let reader = new FileReader();
 		reader.readAsText(file);
 		reader.onload = function() {
-			const inputarea = document.getElementById('anchoredmetadatainputarea');
+			const inputarea = document.getElementById('anchoredMetadataInputArea');
 			inputarea.value = reader.result;
 		};
 	}
@@ -1411,12 +1450,14 @@ function initLinkchain() {
 				return;
 			}
 
-			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
-			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
-			const filtype = 'application/ld+json';
-			const blob = new Blob([data], { type: filtype });
+			let filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
+			filename = filename+'.jsonld';
+			const pathToStore = document.getElementById("PodURL").value+filename;
+			const filetype = 'text/plain'; // must be this or fails - no idea why
+			const blob = new Blob([data], { type: filetype });
+			const file = new File([blob], filename, { type: filetype });
 
-			const fileurl = await Inrupt.writeBlobToPod(blob, pathToStore);
+			const fileurl = await Inrupt.writeFileToPod(file, pathToStore);
 
 			document.getElementById("granularVerificationMetadataSolidURLResult").innerHTML = fileurl;
 		} catch (error) {

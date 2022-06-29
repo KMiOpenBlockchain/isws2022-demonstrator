@@ -2,7 +2,7 @@ cfg = {
 	"tokenContractAddress" : "",
 	"NFT_STORAGE_API_KEY" : "",
 
-	"NFT_STORAGE_API_UPLOAD_URL" : "https://nft.storage/api/upload",
+	"NFT_STORAGE_API_UPLOAD_URL" : "https://api.nft.storage/upload",
 	"NFT_STORAGE_IPFS_URL_STUB" : "https://nftstorage.link/ipfs/",
 	"NFT_STORAGE_IPFS_URL_END" : ".ipfs.nftstorage.link/",
 	"tokenIconURL" : "https://www.w3.org/Icons/SW/sw-cube-v.svg",

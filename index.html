@@ -124,7 +124,7 @@
 
 						<label>Verification Metadata</label>
 						<br />
-						<textarea id="verificationMetadataResult" class="textareastyle" readonly></textarea>
+						<textarea id="verificationMetadataResult" class="textareastyle"></textarea>
 						<br /><br />
 						<label id="verificationMetadataTitleLabel" for="verificationMetadataTitle">URL:&nbsp;</label><span id="verificationMetadataStub"><span style="color:gray">Please add Solid Pod URL on tab 1</span></span>
 						<input type="" id="verificationMetadataTitle" name="verificationMetadataTitle"  size="30" placeholder="filename" title="The filename for this data when stored in Solid. It will have .nq appended"><b>.jsonld</b>&nbsp;
@@ -158,7 +158,7 @@
 						<br /><br />
 						<label>Anchored Verification Metadata</label>
 						<br />
-						<textarea id="anchorMetadataResult" class="textareastyle" readonly></textarea>
+						<textarea id="anchorMetadataResult" class="textareastyle"></textarea>
 						<br /><br />
 						<label id="anchorMetadataTitleLabel" for="anchorMetadataTitle">URL:&nbsp;</label><span id="anchorMetadataStub"><span style="color:gray">Please add Solid Pod URL on tab 1</span></span>
 						<input type="" id="anchorMetadataTitle" name="verificationMetadataTitle"  size="30" placeholder="filename" title="The filename for this data when stored in Solid. It will have .nq appended"><b>.jsonld</b>&nbsp;
@@ -211,7 +211,7 @@
 						<br /><br />
 						<label>Anchored Verification Metadata</label>
 						<br />
-						<textarea id="anchorMetadataTokenResult" class="textareastyle" readonly></textarea>
+						<textarea id="anchorMetadataTokenResult" class="textareastyle"></textarea>
 						<br /><br />
 						<label id="anchorMetadataTokenTitleLabel" for="anchorMetadataTokenTitle">URL:&nbsp;</label><span id="anchorMetadataTokenStub"><span style="color:gray">Please add Solid Pod URL on tab 1</span></span>
 						<input type="" id="anchorMetadataTokenTitle" name="verificationMetadataTokenTitle"  size="30" placeholder="filename" title="The filename for this data when stored in Solid. It will have .nq appended"><b>.jsonld</b>&nbsp;
@@ -228,25 +228,34 @@
 						<h3>Get Granular Metadata to allow per triple/quad verification</h3>
 
 						<br />
-
+						<label for="granularRDFInputFile">Choose a file of RDF:</label>   <input type="file" id="granularRDFInputFile" name="granularRDFInputFile">
+						<button class="button" id="granularRDFInputFileButton" name="granularRDFInputFileButton">Read File</button>
+						<br />
+						OR
+						<br />
 						<label id="anchoredRDFInputLabel" for="anchoredRDFInputURL">Solid URL to RDF Data:</label>
 						<input type="" id="anchoredRDFInputURL" name="anchoredRDFInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-rdf" title="defaults to RDF Input box content">
 						<button class="buttonsolid" disabled="true" name="readAnchoredRDFInputButton" id="readAnchoredRDFInputButton">Read File from Solid</button>
 
 						<br /><br />
-						<label for="anchoredrdfinputarea">RDF Input</label>
+						<label for="anchoredRDFInputArea">RDF Input</label>
 						<br />
-						<textarea name="anchoredrdfinputarea" id="anchoredrdfinputarea" class="textareastyle"></textarea>
+						<textarea name="anchoredRDFInputArea" id="anchoredRDFInputArea" class="textareastyle"></textarea>
 
 						<br /><br />
+						<label for="anchoredMetadataInputAreaFile">Choose a file of RDF:</label>   <input type="file" id="anchoredMetadataInputAreaFile" name="anchoredMetadataInputAreaFile">
+						<button class="button" id="anchoredMetadataInputAreaButton" name="anchoredMetadataInputAreaButton">Read File</button>
+						<br />
+						OR
+						<br />
 						<label id="anchoredMetadataInputLabel" for="anchoredMetadataInputURL">Solid URL to Anchored Metadata:</label>
 						<input type="text" id="anchoredMetadataInputURL" name="anchoredMetadataInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-achored-metadata" title="defaults to Anchored Metadata box content">
 						<button class="buttonsolid" disabled="true" name="readAnchoredMetadataButton" id="readAnchoredMetadataButton">Read File from Solid File</button>
 
 						<br /><br />
-						<label for="anchoredmetadatainputarea">Anchored Verification Metadata</label>
+						<label for="anchoredMetadataInputArea">Anchored Verification Metadata</label>
 						<br />
-						<textarea name="anchoredmetadatainputarea" id="anchoredmetadatainputarea" class="textareastyle" readonly></textarea>
+						<textarea name="anchoredMetadataInputArea" id="anchoredMetadataInputArea" class="textareastyle"></textarea>
 
 						<br /><br />
 						<button class="buttonlinkchain" id="granularVerificationMetadataButton">Get Granular Verification Metadata</button>
@@ -254,7 +263,7 @@
 
 						<label>Granular Verification Metadata</label>
 						<br />
-						<textarea id="granularVerificationMetadataResult" class="textareastyle" readonly></textarea>
+						<textarea id="granularVerificationMetadataResult" class="textareastyle"></textarea>
 						<br /><br />
 
 						<label id="granularVerificationTitleLabel" for="granularVerificationMetadataTitle">URL:&nbsp;</label> <span id="granularVerificationMetadataStub"><span style="color:gray">Please add Solid Pod URL on tab 1</span></span>
@@ -271,6 +280,11 @@
 					<div class="panel" style="clear:both; left;margin-top:20px;">
 						<h3>Validate RDF Data - All</h3>
 						<br /><br />
+						<label for="validateRDFInputFile">Choose a file of RDF:</label>   <input type="file" id="validateRDFInputFile" name="validateRDFInputFile">
+						<button class="button" id="validateRDFInputFileButton" name="validateRDFInputFileButton">Read File</button>
+						<br />
+						OR
+						<br />
 						<label id="validateRDFInputLabel" for="validateRDFInputURL">Solid URL to RDF Data:</label>
 						<input type="text" id="validateRDFInputURL" name="validateRDFInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-rdf" title="defaults to RDF Input box content">
 						<button class="buttonsolid" disabled="true" name="readValidateRDFInputButton" id="readValidateRDFInputButton">Read File from Solid</button>
@@ -281,6 +295,11 @@
 						<textarea name="validateRDFInputArea" id="validateRDFInputArea" class="textareastyle"></textarea>
 
 						<br /><br />
+						<label for="validateAnchoredMetadataInputFile">Choose a file of RDF:</label>   <input type="file" id="validateAnchoredMetadataInputFile" name="validateAnchoredMetadataInputFile">
+						<button class="button" id="validateAnchoredMetadataInputFileButton" name="validateAnchoredMetadataInputFileButton">Read File</button>
+						<br />
+						OR
+						<br />
 						<label id="validateAnchoredMetadataInputLabel" for="validateAnchoredMetadataInputURL">Solid URL to Anchored Metadata:</label>
 						<input type="" id="validateAnchoredMetadataInputURL" name="avalidateAnchoredMetadataInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-achored-metadata" title="defaults to Anchored Metadata box content">
 						<button class="buttonsolid" disabled="true" name="readAnchoredMetadataValidationButton" id="readAnchoredMetadataValidationButton">Read File from Solid</button>
@@ -288,12 +307,12 @@
 						<br /><br />
 						<label for="anchoredMetadataValidationInputArea">RDF Input Anchored Validation Metadata</label>
 						<br />
-						<textarea name="anchoredMetadataValidationInputArea" id="anchoredMetadataValidationInputArea" class="textareastyle" readonly></textarea>
+						<textarea name="anchoredMetadataValidationInputArea" id="anchoredMetadataValidationInputArea" class="textareastyle"></textarea>
 
 						<br /><br />
 						<button class="buttonmetamask" id="validateButton" name="validateButton" disabled="true">Validate</button>
 						<br /><br />
-						<textarea id="validateResult" name="validateResult" class="textareastyle" readonly></textarea>
+						<textarea id="validateResult" name="validateResult" class="textareastyle"></textarea>
 					</div>
 				</div>
 
@@ -301,6 +320,11 @@
 					<div class="panel" style="clear:both; float: left;margin-top:20px;">
 						<h3>Validate RDF Data - Granular</h3>
 						<br /><br />
+						<label for="validateGranularRDFInputFile">Choose a file of RDF:</label>   <input type="file" id="validateGranularRDFInputFile" name="validateGranularRDFInputFile">
+						<button class="button" id="validateGranularRDFInputButton" name="validateGranularRDFInputButton">Read File</button>
+						<br />
+						OR
+						<br />
 						<label id="validateRDFInputLabelGanular" for="validateGranularRDFInputURL">Solid URL to RDF Data:</label>
 						<input type="" id="validateGranularRDFInputURL" name="validateGranularRDFInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-rdf" title="defaults to RDF Input box content">
 						<button class="buttonsolid" disabled="true" name="readValidateGranularRDFInputButton" id="readValidateGranularRDFInputButton">Read File from Solid</button>
@@ -311,6 +335,11 @@
 						<textarea name="validateGranularRDFInputArea" id="validateGranularRDFInputArea" class="textareastyle"></textarea>
 
 						<br /><br />
+						<label for="granularMetadataValidationInputFile">Choose a file of RDF:</label>   <input type="file" id="granularMetadataValidationInputFile" name="granularMetadataValidationInputFile">
+						<button class="button" id="granularMetadataValidationInputButton" name="granularMetadataValidationInputButton">Read File</button>
+						<br />
+						OR
+						<br />
 						<label id="validateGranularMetadataInputLabel" for="validateGranularMetadataInputURL">Solid URL to Granular Metadata:</label>
 						<input type="" id="validateGranularMetadataInputURL" name="validateGranularMetadataInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-granular-metadata" title="defaults to Granular Verification Metadata box content">
 						<button class="buttonsolid" disabled="true" name="readGranularMetadataValidationButton" id="readGranularMetadataValidationButton">Read File from Solid</button>
@@ -318,12 +347,12 @@
 						<br /><br />
 						<label for="granularMetadataValidationInputArea">RDF Input Granular Validation Metadata</label>
 						<br />
-						<textarea name="granularMetadataValidationInputArea" id="granularMetadataValidationInputArea" class="textareastyle" readonly></textarea>
+						<textarea name="granularMetadataValidationInputArea" id="granularMetadataValidationInputArea" class="textareastyle"></textarea>
 
 						<br /><br />
 						<button class="buttonmetamask" id="validateGranularButton" name="validateGranularButton" disabled="true">Validate</button>
 						<br /><br />
-						<textarea name="validateGranularResult" id="validateGranularResult" class="textareastyle" readonly></textarea>
+						<textarea name="validateGranularResult" id="validateGranularResult" class="textareastyle"></textarea>
 					</div>
 				</div>
 
@@ -335,7 +364,7 @@
 						<br /><br />
 						<label for="tokenContractOutput">Response</label>
 						<br />
-						<textarea name="tokenContractOutput" id="tokenContractOutput" class="textareastyle" readonly></textarea>
+						<textarea name="tokenContractOutput" id="tokenContractOutput" class="textareastyle"></textarea>
 					</div>
 				</div>
 
