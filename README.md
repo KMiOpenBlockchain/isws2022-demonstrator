@@ -177,7 +177,7 @@ For our demo, we have used the Rinkby Tesnet. So before interacting with our dem
   
 ![](images/docs/metamask5a.png)  
 
-If it is unavailable, you will need to go to the advnaced settings and turn on the test networks
+If it is unavailable, you will need to go to the settings / advanced and turn on the test networks
 
 ![](images/docs/metamask7.png)  
   
