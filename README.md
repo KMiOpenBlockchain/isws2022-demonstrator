@@ -176,6 +176,10 @@ Once you have created your wallet, you will automatically be able to switch betw
 For our demo, we have used the Rinkby Tesnet. So before interacting with our demo, please select the Rinkby Testnet in your MetaMask Wallet.  
   
 ![](images/docs/metamask5a.png)  
+
+If it is unavailable, you will need to go to the advnaced settings and turn on the test networks
+
+![](images/docs/metamask7.png)  
   
 Your account should be pre-seeded with 1 Rinkgy eth. Transaction costs are low on Rinbky so this should be sufficient.  
 However, if you require more eth at any point, you can request 0.5 eth a day from this Faucet: [Top up your Rinkby Eth (0.5 eth a day)](https://faucet.paradigm.xyz/)  
