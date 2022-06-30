@@ -403,8 +403,16 @@ contract RDFTokens is ERC721URIStorage {
 
 *   [MetaMask Developer Documentation](https://docs.metamask.io/guide/)
 *   [Top up your Rinkby Eth (0.5 eth a day)](https://faucet.paradigm.xyz/)
-*   [Open Zeppelin NFT Token contracts](https://docs.openzeppelin.com/contracts/4.x/)
 *   [Etheres.js documentation](https://docs.ethers.io/v5/)
+*   [About Solid](https://inrupt.com/solid/)
+*   [Sign Up To Solid](https://signup.pod.inrupt.com/)
+*   [Solid Pod Browser Documentation](https://docs.inrupt.com/user-interface/podbrowser/)
+*   [Inrupt Solid developer tools](https://inrupt.com/products/dev-tools)
+*   [Inrupt Libraries](https://docs.inrupt.com/developer-tools/javascript/client-libraries/)
+*   [About IPFS](https://ipfs.io/)
+*   [About Net.Storage](https://nft.storage/)
 *   [NFT.Storage - Get an API Token](https://nft.storage/docs/#get-an-api-token)
+*   [Open Zeppelin NFT Token contracts](https://docs.openzeppelin.com/contracts/4.x/)
+*   [Remix - Solidity IDE](https://remix.ethereum.org/)
 
 * * *
