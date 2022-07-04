@@ -8,6 +8,8 @@
 *   [MetaMask and the Rinkby Ethereum Testnet](#metamask-and-the-rinkby-ethereum-testnet)
       *   [Installing MetaMask](#installing-metamask)
       *   [Working with MetaMask](#working-with-metamask)
+      *   [Viewing your NFT Tokens On Etherscan](#viewing-your-nft-tokens-on-etherscan)
+      *   [Viewing your NFT Tokens in MetaMask](#viewing-your-nft-tokens-in-metamask)
  
 *   [Solid and the Inrupt API](#solid-and-the-inrupt-api)
       *   [Creating an Inrupt Solid Pod](#creating-an-inrupt-solid-pod)
@@ -216,6 +218,10 @@ Once you have created your wallet, you will automatically be able to switch betw
 For our demo, we have used the Rinkby Tesnet. So before interacting with our demo, please select the Rinkby Testnet in your MetaMask Wallet.  
   
 ![](images/docs/metamask5a.png)  
+
+If it is unavailable, you will need to go to the settings / advanced and turn on the test networks
+
+![](images/docs/metamask7.png)  
   
 Your account should be pre-seeded with 1 Rinkgy eth. Transaction costs are low on Rinbky so this should be sufficient.  
 However, if you require more eth at any point, you can request 0.5 eth a day from this Faucet: [Top up your Rinkby Eth (0.5 eth a day)](https://faucet.paradigm.xyz/)  
@@ -252,6 +258,42 @@ await provider.send("eth\_requestAccounts", \[\]);
 
 For full details, their documentation can be found here: [https://docs.ethers.io/v5/](https://docs.ethers.io/v5/)  
   
+### Viewing your NFT Tokens On Etherscan
+
+You can view the details of the RDF Tokens you have minted by viewing them on the Rinkby Etherscan site. First open MetaMask and click the 'Activity' tab:
+
+![](images/docs/metamask11.png)
+
+Then click on one of the 'Mint Token' activities and it will open the details of that transaction:
+
+![](images/docs/metamask12.png)
+
+To view the full details on Etherscan, including the Token Id number of the issued RDF NFT, click the 'View on block explorer' link. This will open a new browser tab showing the details of that transaction on Etherscan. The Token ID number can be see (we have highlighted it in yellow on the image below):
+
+![](images/docs/metamask10.png)
+  
+### Viewing your NFT Tokens in MetaMask
+
+If you want to see your RDF NFT Tokens in your MetMask Wallet on the Rinkby Ethereum blockchain, you will need to import the Token. But note, Metamask will not currently let you view them as NFTs, but just 'fungible' tokens. So what you will see is just a count of how many you have. But at least that will confirm that the issuing of the RDF NFTs is happening. To Import our Token Contract into your MetaMask wallet, please do the following:
+
+- Open MetaMask and switch toi the Rinkby Network, if you are not already on it.
+- At the bottom select the 'Assets' tab, if not already selected
+- Select 'Import Tokens'
+- In the form set the:
+  - 'Token Contract Address' to '0x0a07137A9Fee5aa8828ECc6dc2ef8f22C352c20a' - this is the Token Contract Address for our demo.
+  - 'Token Symbol' should auto complete as 'RDFNFT'
+  - 'Token Decimal' should be set to '0'
+- Once you press the 'Add Custom Token' button, you should see the number of RDFNFTs you have listed in the Assets list.
+
+![](images/docs/metamask8.png)  
+
+As we said, MetaMask treats them as 'fungible' tokens at the moment, so what you can see is a count of how many you have:
+
+![](images/docs/metamask9.png)  
+
+Currently MetaMask only supports being able to see individual NFTs in their Mobile app. We have not tested adding our custom Rinkby-based NFT contract to the MetaMask Mobile App. But general instructions can be found here: [NFT Tokens in your MetaMask Wallet](https://metamask.zendesk.com/hc/en-us/articles/360058238591-NFT-tokens-in-your-MetaMask-wallet) . Note: as we are working on the Rinkby testnet, this NFT will not be on Opensea as they talk about in their docs. The Token Contract address you will need is listed above and you can see your Token ID numbers by viewing your mint Token transactions on [https://rinkeby.etherscan.io/](https://rinkeby.etherscan.io/). Here is an example of 1 mint Token transaction viewed on etherscan. The token ID has been highlighted in yellow: 
+
+![](images/docs/metamask10.png)  
 
 * * *
 
@@ -431,14 +473,24 @@ contract RDFTokens is ERC721URIStorage {
 
 ## Stepping Through the Demo
 
+[![Foo](https://blockchain7.kmi.open.ac.uk/movies/movies/iswssummerschooldemo.png)](https://blockchain7.kmi.open.ac.uk/movies/movies/iswssummerschooldemo.mp4)
+
 * * *
 
 ## Useful Resources:
 
 *   [MetaMask Developer Documentation](https://docs.metamask.io/guide/)
 *   [Top up your Rinkby Eth (0.5 eth a day)](https://faucet.paradigm.xyz/)
-*   [Open Zeppelin NFT Token contracts](https://docs.openzeppelin.com/contracts/4.x/)
 *   [Etheres.js documentation](https://docs.ethers.io/v5/)
+*   [About Solid](https://inrupt.com/solid/)
+*   [Sign Up To Solid](https://signup.pod.inrupt.com/)
+*   [Solid Pod Browser Documentation](https://docs.inrupt.com/user-interface/podbrowser/)
+*   [Inrupt Solid developer tools](https://inrupt.com/products/dev-tools)
+*   [Inrupt Libraries](https://docs.inrupt.com/developer-tools/javascript/client-libraries/)
+*   [About IPFS](https://ipfs.io/)
+*   [About Net.Storage](https://nft.storage/)
 *   [NFT.Storage - Get an API Token](https://nft.storage/docs/#get-an-api-token)
+*   [Open Zeppelin NFT Token contracts](https://docs.openzeppelin.com/contracts/4.x/)
+*   [Remix - Solidity IDE](https://remix.ethereum.org/)
 
 * * *

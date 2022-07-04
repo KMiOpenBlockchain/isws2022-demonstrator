@@ -43,9 +43,10 @@ body {
 	text-decoration: underline;
 }
 
-#headlinks {
+.headlinks {
 	display: block;
 	margin-top: 45px;
+	margin-left: 40px;
 	bottom: 0;
 	float: right;
 	font: 0.9em helvetica, sans-serif;
