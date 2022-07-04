@@ -220,7 +220,7 @@ For full details, their documentation can be found here: [https://docs.ethers.io
   
 ### Viewing your NFT Tokens in MetaMask
 
-If you want to see your RDF NFT Tokens in your MetMask Wallet on the Rinkby Ethereum blockchain, you will need to do the following:
+If you want to see your RDF NFT Tokens in your MetMask Wallet on the Rinkby Ethereum blockchain, you will need to import the Token. But note, Metamask will not currently let you view them as NFTs just Fungible tokens. So what you wilol see if just a count of how many you have. But at least that will confirm that the issuing of the RDF NFTs is happening. To Import our Token Contract into your MetaMask wallet, please do the following:
 
 - Open MetaMask and switch toi the Rinkby Network, if you are not already on it.
 - At the bottom select the 'Assets' tab, if not already selected
@@ -233,7 +233,7 @@ If you want to see your RDF NFT Tokens in your MetMask Wallet on the Rinkby Ethe
 
 ![](images/docs/metamask8.png)  
 
-MetaMask treats them 'Fungible' tokens at the moment - but at least you can see a count of them.
+MetaMask treats them as 'Fungible' tokens at the moment, so waht you can see is a count of how many you have:
 
 ![](images/docs/metamask9.png)  
 
