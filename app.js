@@ -583,7 +583,7 @@ async function deployMerQLAnchorContract(anchor, options) {
 async function anchorMetadata() {
 
 	try {
-		let options = {}
+		let options = {}; // requires no additional options as it is using the default Linkchain MerQL Contract way of anchoring
 
 		const verificationMetadata = document.getElementById('verificationmetadatainputarea');
 		let dataToAnchor = "";
@@ -598,10 +598,7 @@ async function anchorMetadata() {
 		anchorMetadataResult.value = "Depending on the input size, this can take a while. Please wait while processing..."
 
 		//const handler = async function(anchor, options) {
-
 		//	let reply = await deployMerQLAnchorContract(anchor, options);
-		//	console.log("reply: "+reply);
-
 		//	return reply;
 		//}
 
