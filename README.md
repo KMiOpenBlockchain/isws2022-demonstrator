@@ -237,7 +237,7 @@ As we said, MetaMask treats them as 'fungible' tokens at the moment, so what you
 
 ![](images/docs/metamask9.png)  
 
-Currently MetaMask only supports being able to see individual NFTs in their Mobile app. We have not tested adding our custom Rinkby-based NFT contract to the Mobile App in MetaMask. But general instructions can be found here: [NFT Tokens in your MetaMask Wallet](https://metamask.zendesk.com/hc/en-us/articles/360058238591-NFT-tokens-in-your-MetaMask-wallet) . Note: as we are working on the Rinkby testnet, this NFT will not be on Opensea as they talk about in their docs. The Token Contract address you will need is listed above and you can see your Token ID numbers by viewing your transactions on [https://rinkeby.etherscan.io/](https://rinkeby.etherscan.io/).
+Currently MetaMask only supports being able to see individual NFTs in their Mobile app. We have not tested adding our custom Rinkby-based NFT contract to the MetaMask Mobile App. But general instructions can be found here: [NFT Tokens in your MetaMask Wallet](https://metamask.zendesk.com/hc/en-us/articles/360058238591-NFT-tokens-in-your-MetaMask-wallet) . Note: as we are working on the Rinkby testnet, this NFT will not be on Opensea as they talk about in their docs. The Token Contract address you will need is listed above and you can see your Token ID numbers by viewing your transactions on [https://rinkeby.etherscan.io/](https://rinkeby.etherscan.io/).
 
 * * *
 
