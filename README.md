@@ -98,7 +98,7 @@ Returns anchored Linkchain MerQL verification metadata.
 
 anchorFunction takes care of actual blockchain writing based on options (contents of options vary with implementation of anchorFunction)
 
-Code snippet from ISWS 2022 Demonstrator for acnhoring with a MerQl Anchor Contract:
+Code snippet from ISWS 2022 Demonstrator for acnhoring with a MerQL Anchor Contract:
 ```
 let dataToAnchor = <the rdf code that was anchored>;
 let options = {}
