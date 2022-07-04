@@ -8,6 +8,7 @@
 *   [MetaMask and the Rinkby Ethereum Testnet](#metamask-and-the-rinkby-ethereum-testnet)
       *   [Installing MetaMask](#installing-metamask)
       *   [Working with MetaMask](#working-with-metamask)
+      *   [Viewing your NFT Tokens On Etherscan](#viewing-your-nft-tokens-on-etherscan)
       *   [Viewing your NFT Tokens in MetaMask](#viewing-your-nft-tokens-in-metamask)
  
 *   [Solid and the Inrupt API](#solid-and-the-inrupt-api)
@@ -217,6 +218,19 @@ await provider.send("eth\_requestAccounts", \[\]);
 
 For full details, their documentation can be found here: [https://docs.ethers.io/v5/](https://docs.ethers.io/v5/)  
   
+### Viewing your NFT Tokens On Etherscan
+
+You can view the details of the RDF Tokens you have minted by viewing them on Rinkby Etherscan site. First open MetaMask and click the 'Activity' tab:
+
+![](images/docs/metamask11.png)
+
+Then clikc on one of the Mont Token activities and it will open the details of that transaction:
+
+![](images/docs/metamask12.png)
+
+Then to view the details on etherscan click the ' View on block explorer' link and it will open a new browser tab showing the details of that transaction on etherscan. The Token ID number can be see (we have highlighted it in yellow on the image below):
+
+![](images/docs/metamask10.png)
   
 ### Viewing your NFT Tokens in MetaMask
 
