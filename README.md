@@ -233,7 +233,7 @@ If you want to see your RDF NFT Tokens in your MetMask Wallet on the Rinkby Ethe
 
 ![](images/docs/metamask8.png)  
 
-MetaMask treats them as 'Fungible' tokens at the moment, so waht you can see is a count of how many you have:
+As we said, MetaMask treats them as 'fungible' tokens at the moment, so what you can see is a count of how many you have:
 
 ![](images/docs/metamask9.png)  
 
