@@ -101,7 +101,7 @@ anchorFunction takes care of actual blockchain writing based on options (content
 Code snippet from ISWS 2022 Demonstrator for acnhoring with a MerQL Anchor Contract:
 ```
 let dataToAnchor = <the rdf code that was anchored>;
-let options = {} // requires no additional options as it isn using the vanilla Linkchain contract way of anchoring
+let options = {} // requires no additional options as it is using the default Linkchain MerQL Contract way of anchoring
 const anchoredMetadata = await linkchains.anchorMetadata(dataToAnchor, options, deployMerQLAnchorContract);
 
 ```
