@@ -237,6 +237,8 @@ As we said, MetaMask treats them as 'fungible' tokens at the moment, so what you
 
 ![](images/docs/metamask9.png)  
 
+Currently MetaMask only supports being able to see individual NFTs in their Mobile app. We have not tested adding our custom Rinkby-based NFT contract to the Mobile App in MetaMask. But general instructions can be found here: [NFT Tokens in your MetaMask Wallet](https://metamask.zendesk.com/hc/en-us/articles/360058238591-NFT-tokens-in-your-MetaMask-wallet)  
+
 * * *
 
 ## Solid and the Inrupt API
