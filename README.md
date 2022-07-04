@@ -226,11 +226,12 @@ If you want to see your RDF NFT Tokens in your MetMask Wallet on the Rinkby Ethe
 - At the bottom select the 'Assets' tab, if not already selected
 - Select 'Import Tokens'
 - In the form set the:
-	-- 'Token Contract Address' to '0x0a07137A9Fee5aa8828ECc6dc2ef8f22C352c20a'
-	-- The 'Token Symbol' should auto complete as 'RDFNFT'
-	-- The 'Token Decimal' should be set to '0'
-- Once you press the 'Add Custome Token' button, you should see the number of RDFNFTs you have listed in the Assets list.
+  - 'Token Contract Address' to '0x0a07137A9Fee5aa8828ECc6dc2ef8f22C352c20a' - this is the Token Contract Address for our demo.
+  - The 'Token Symbol' should auto complete as 'RDFNFT'
+  - The 'Token Decimal' should be set to '0'
+- Once you press the 'Add Custom Token' button, you should see the number of RDFNFTs you have listed in the Assets list.
 
+![](images/docs/metamask8.png)  
 
 * * *
 
