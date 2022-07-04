@@ -220,15 +220,15 @@ For full details, their documentation can be found here: [https://docs.ethers.io
   
 ### Viewing your NFT Tokens On Etherscan
 
-You can view the details of the RDF Tokens you have minted by viewing them on Rinkby Etherscan site. First open MetaMask and click the 'Activity' tab:
+You can view the details of the RDF Tokens you have minted by viewing them on the Rinkby Etherscan site. First open MetaMask and click the 'Activity' tab:
 
 ![](images/docs/metamask11.png)
 
-Then clikc on one of the Mont Token activities and it will open the details of that transaction:
+Then click on one of the 'Mint Token' activities and it will open the details of that transaction:
 
 ![](images/docs/metamask12.png)
 
-Then to view the details on etherscan click the ' View on block explorer' link and it will open a new browser tab showing the details of that transaction on etherscan. The Token ID number can be see (we have highlighted it in yellow on the image below):
+To view the full details on Etherscan, including the Token Id number of the issued RDF NFT, click the 'View on block explorer' link. This will open a new browser tab showing the details of that transaction on Etherscan. The Token ID number can be see (we have highlighted it in yellow on the image below):
 
 ![](images/docs/metamask10.png)
   
