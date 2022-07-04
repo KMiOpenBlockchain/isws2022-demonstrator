@@ -106,7 +106,7 @@ const anchoredMetadata = await linkchains.anchorMetadata(dataToAnchor, options, 
 
 ```
 
-Code snippet from ISWS 2022 Demonstrator for acnhoring with tokens:
+Code snippet from ISWS 2022 Demonstrator for anchoring with tokens:
 ```
 
 let dataToAnchor = <the rdf code that was anchored>;
