@@ -8,6 +8,7 @@
 *   [MetaMask and the Rinkby Ethereum Testnet](#metamask-and-the-rinkby-ethereum-testnet)
       *   [Installing MetaMask](#installing-metamask)
       *   [Working with MetaMask](#working-with-metamask)
+      *   [Viewing your NFT Tokens in MetaMask](#viewing-your-nft-tokens-in-metamask)
  
 *   [Solid and the Inrupt API](#solid-and-the-inrupt-api)
       *   [Creating an Inrupt Solid Pod](#creating-an-inrupt-solid-pod)
@@ -216,6 +217,21 @@ await provider.send("eth\_requestAccounts", \[\]);
 
 For full details, their documentation can be found here: [https://docs.ethers.io/v5/](https://docs.ethers.io/v5/)  
   
+  
+### Viewing your NFT Tokens in MetaMask
+
+If you want to see your RDF NFT Tokens in your MetMask Wallet on the Rinkby Ethereum blockchain, you will need to do the following:
+
+- Open MetaMask and switch toi the Rinkby Network, if you are not already on it.
+- At the bottom select the 'Assets' tab, if not already selected
+- Select 'Import Tokens'
+- In the form set the:
+  - 'Token Contract Address' to '0x0a07137A9Fee5aa8828ECc6dc2ef8f22C352c20a' - this is the Token Contract Address for our demo.
+  - 'Token Symbol' should auto complete as 'RDFNFT'
+  - 'Token Decimal' should be set to '0'
+- Once you press the 'Add Custom Token' button, you should see the number of RDFNFTs you have listed in the Assets list.
+
+![](images/docs/metamask8.png)  
 
 * * *
 
