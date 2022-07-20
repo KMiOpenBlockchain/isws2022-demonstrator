@@ -346,7 +346,7 @@ However, you may prefer to get your own api key for your own project. It is free
   
   
 
-For our demo we are creating the IPFS file in the following format: [RDFTokens Metadata Example](nftmeta), as a JSON string and then using the NFT.Storage api call _'https://nft.storage/api/upload'_ and passing the string as a Blob.  
+For our demo we are creating the IPFS file in the following format: [RDFTokens Metadata Example](#rdftokens-metadata-example), as a JSON string and then using the NFT.Storage api call _'https://nft.storage/api/upload'_ and passing the string as a Blob.  
 See the function _'storeToIPFS(content)'_ in _'app.js'_ in our demo source code for full details.
 
 * * *
