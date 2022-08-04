@@ -34,7 +34,7 @@ let ethereum = {}
 let account = "";
 
 let provider = {};
-let signer = {}
+let signer = {};
 
 let ipfscache = {};
 let tokencache = {};
@@ -117,9 +117,16 @@ async function initLinkchain() {
 		readLocalInputData('fileoftriples', 'inputarea', ['anchoredRDFInputArea', 'validateRDFInputArea', 'validateGranularRDFInputArea']);
 	};
 
+	// merql contract anchoring
 	const readVerificationMetadataFileButton = document.querySelector("#readVerificationMetadataFileButton");
 	readVerificationMetadataFileButton.onclick = async function() {
-		readLocalInputData('verificationMetadataFile', 'verificationmetadatainputarea', []);
+		readLocalInputData('verificationMetadataFile', 'verificationMetadataInputArea', []);
+	};
+
+	// token contract anchoring
+	const readVerificationMetadataTokenFileButton = document.querySelector("#readVerificationMetadataTokenFileButton");
+	readVerificationMetadataTokenFileButton.onclick = async function() {
+		readLocalInputData('verificationMetadataTokenFile', 'verificationMetadataTokenInputArea', []);
 	};
 
 	// Granular
@@ -154,6 +161,28 @@ async function initLinkchain() {
 	granularMetadataValidationInputButton.onclick = async function() {
 		readLocalInputData('granularMetadataValidationInputFile', 'granularMetadataValidationInputArea', []);
 	};
+
+	/* BUTTONS THAT SAVE TO A LOCAL FILE */
+	const storeLocallyVerificationMetadataButton = document.querySelector("#storeLocallyVerificationMetadataButton");
+	storeLocallyVerificationMetadataButton.onclick = async function() {
+		saveToFile('verificationMetadataResult');
+	};
+
+	const storeLocallyAnchorMetadataButton = document.querySelector("#storeLocallyAnchorMetadataButton");
+	storeLocallyAnchorMetadataButton.onclick = async function() {
+		saveToFile('anchorMetadataResult');
+	};
+
+	const storeLocallyAnchorMetadataTokenButton = document.querySelector("#storeLocallyAnchorMetadataTokenButton");
+	storeLocallyAnchorMetadataTokenButton.onclick = async function() {
+		saveToFile('anchorMetadataTokenResult');
+	};
+
+	const storeLocallyGanularMetadataButton = document.querySelector("#storeLocallyGanularMetadataButton");
+	storeLocallyGanularMetadataButton.onclick = async function() {
+		saveToFile('granularVerificationMetadataResult');
+	};
+
 
 	/* LINKCHAIN RELATED BUTTONS */
 
@@ -372,7 +401,7 @@ async function initLinkchain() {
 		let reader = new FileReader();
 		reader.readAsText(file);
 		reader.onload = function() {
-			const inputarea = document.getElementById('verificationmetadatainputarea');
+			const inputarea = document.getElementById('verificationMetadataInputArea');
 			inputarea.value = reader.result;
 		};
 	}
@@ -671,12 +700,16 @@ async function loginToMetaMask() {
 	}
 }
 
+/**
+ * Change the selected network on the Token issuing tab selection menu.
+ */
 async function selectNetwork() {
 	try {
 		const networkSelect = document.getElementById('networks');
 
-		const currentNetwork = await getNetworkName();
-		const matchName = currentNetwork.charAt(0).toUpperCase() + currentNetwork.slice(1);
+		const currentNetwork = await getNetwork();
+		const networkName = currentNetwork.name;
+		const matchName = networkName.charAt(0).toUpperCase() + networkName.slice(1);
 
 		for(var i=0; i<networkSelect.options.length; i++) {
 			if ( networkSelect.options[i].text == matchName ) {
@@ -690,7 +723,10 @@ async function selectNetwork() {
 	}
 }
 
-async function getNetworkName() {
+/**
+ * Ask MetaMask for the details of the current network selected.
+ */
+async function getNetwork() {
 	try {
 		// get the chain id of the current blockchain your wallet is pointing at.
 		const chainId = await signer.getChainId();
@@ -698,10 +734,42 @@ async function getNetworkName() {
 
 		// get the network details for the given chain id.
 		const network = await provider.getNetwork(chainId);
+		//console.log(network);
 
-		return network.name;
+		return network;
 	} catch (e) {
 		throw e;
+	}
+}
+
+/**
+ * Ask MetaMask to switch to the network in the networkObj passed in.
+ */
+async function switchNetwork(networkObj) {
+	try {
+		let chainId = networkObj.chainId;
+		chainId = parseInt(chainId);
+		const hexChainId = ethers.utils.hexValue(chainId);
+
+		await ethereum.request({
+			method: 'wallet_switchEthereumChain',
+			params: [{ chainId: hexChainId}],
+		});
+
+		provider = new ethers.providers.Web3Provider(window.ethereum)
+		console.log('provider:', provider);
+		signer = provider.getSigner();
+		console.log('signer:', signer);
+		await selectNetwork();
+
+	} catch (switchError) {
+		// This error code indicates that the chain has not been added to MetaMask.
+		console.log(switchError);
+		if (switchError.code === 4902) {
+			throw new Error("The required network is not available in your MetaMask, please add: "+networkObj.name);
+		} else {
+			throw new Error("Failed to switch to the network");
+		}
 	}
 }
 
@@ -741,6 +809,24 @@ async function readLocalInputData(filefieldname, inputareaname, prefillAreasArra
 	}
 }
 
+async function saveToFile(inputareaname) {
+
+	const inputarea = document.getElementById(inputareaname);
+	const textToSave = inputarea.value;
+
+	const opts = {
+		types: [{
+			description: 'Json file',
+			accept: {'application/json': ['.json']},
+		}],
+	};
+
+	const fileHandle = await window.showSaveFilePicker(opts);
+	const fileStream = await fileHandle.createWritable();
+	await fileStream.write(new Blob([textToSave], {type: 'application/json'}));
+	await fileStream.close();
+}
+
 /**
  * Call linkchains passing some triples and get back the verification metadata object for those triples
  */
@@ -757,7 +843,7 @@ async function getVerificationMetadata() {
 			verificationMetadataResult.value = JSON.stringify(metadata, null, 2);
 
 			// also add to next stage for non solid workflow
-			const verificationMetadata = document.getElementById('verificationmetadatainputarea');
+			const verificationMetadata = document.getElementById('verificationMetadataInputArea');
 			verificationMetadata.value = JSON.stringify(metadata, null, 2);
 
 			// also add to next stage for non solid workflow
@@ -887,6 +973,16 @@ async function readTokenMetadata(anchor, options) {
 	//anchor.account
 	//anchor.transactionhash
 	//anchor.tokenid
+
+	const currentNetwork = await getNetwork();
+	delete currentNetwork._defaultProvider; // we don't want that bit
+
+	if (anchor.network && anchor.network.name != currentNetwork.name) {
+		//alert("Please switch networks. This data was anchored on: "+anchor.network.name);
+		//throw new Error("Wrong network detected to validate against");
+		await switchNetwork(anchor.network);
+
+	}
 
 	const validateResult = document.getElementById('validateResult');
 
@@ -1020,15 +1116,20 @@ async function issueToken(anchor, options) {
 
 		const tokenurl = await createTokenMetadata(name, description, imageurl, anchor);
 
-		const abi = cfg.RDFTokenContract.abi;
+		// detect the current network being used.
+		const currentNetwork = await getNetwork();
+		delete currentNetwork._defaultProvider; // we don't want that bit
 
+		const abi = cfg.RDFTokenContract.abi;
 		const contractInstance = new ethers.Contract(options.address, abi, provider);
 
 		anchorMetadataResult.value = "Waiting to be mined....";
 
 		let tx = await contractInstance.connect(signer).mintToken(account, tokenurl);
 
-        const contractReceipt = await tx.wait()
+        const contractReceipt = await tx.wait();
+        console.log(contractReceipt);
+
 		const event = contractReceipt.events.find(event => event.event === 'TokenMint');
 		const [recipient, url, tokenid] = event.args;
 		const convertedtokenid = tokenid.toString();
@@ -1038,6 +1139,7 @@ async function issueToken(anchor, options) {
 			account: account,
 			transactionHash: contractReceipt.transactionHash,
 			tokenId: convertedtokenid,
+			network: currentNetwork,
 		};
 
 		return Object.assign(anchor, result);
@@ -1137,15 +1239,27 @@ async function readMerQLAnchorContract(anchor, option) {
 	//anchor.account
 	//anchor.transactionhash
 
-	const validateResult = document.getElementById('validateResult');
+	console.log("Anchor:");
+	console.log(anchor);
 
-	const abi = cfg.MerQLAnchorContract.abi;
+	const currentNetwork = await getNetwork();
+	delete currentNetwork._defaultProvider; // we don't want that bit
+
+	if (anchor.network && anchor.network.name != currentNetwork.name) {
+		//alert("Please switch networks. This data was anchored on: "+anchor.network.name);
+		//throw new Error("Wrong network detected to validate against");
+		await switchNetwork(anchor.network);
+	}
+
 	contractAddress = anchor.address;
 
 	// check if it cached first
 	if (contractcache[contractAddress] !== undefined) {
 		return contractcache[contractAddress];
 	}
+
+	const validateResult = document.getElementById('validateResult');
+	const abi = cfg.MerQLAnchorContract.abi;
 
 	try {
 		const theContract = new ethers.Contract(contractAddress, abi, provider);
@@ -1189,6 +1303,9 @@ async function deployMerQLAnchorContract(anchor, options) {
 	const bytecode = cfg.MerQLAnchorContract.bytecode;
 
 	try {
+		const currentNetwork = await getNetwork();
+		delete currentNetwork._defaultProvider; // we don't want that bit
+
 		const factory = new ethers.ContractFactory(abi, bytecode, signer);
 
 		var indexHash = anchor.indexhash;
@@ -1218,7 +1335,8 @@ async function deployMerQLAnchorContract(anchor, options) {
 		const result = {
 			address: receipt.contractAddress,
 			account: account,
-			transactionHash: receipt.transactionHash
+			transactionHash: receipt.transactionHash,
+			network: currentNetwork
 		};
 
 		return Object.assign(anchor, result);
@@ -1239,7 +1357,7 @@ async function anchorMetadata() {
 	try {
 		let options = {}; // requires no additional options as it is using the default Linkchain MerQL Contract way of anchoring
 
-		const verificationMetadata = document.getElementById('verificationmetadatainputarea');
+		const verificationMetadata = document.getElementById('verificationMetadataInputArea');
 		let dataToAnchor = "";
 		if (verificationMetadata.value != "") {
 			dataToAnchor = verificationMetadata.value;
@@ -1568,7 +1686,7 @@ function clearAll() {
 
 	// Anchor Verification Metadata to the Blockchain with a Contract
 	document.getElementById('verificationMetadataInputURL').value = "";
-	document.getElementById('verificationmetadatainputarea').value = "";
+	document.getElementById('verificationMetadataInputArea').value = "";
 	document.getElementById('anchorMetadataResult').value = "";
 	document.getElementById('anchorMetadataTitle').value = "";
 	document.getElementById('anchorMetadataSolidURLResult').innerHTML = "";
@@ -1579,6 +1697,7 @@ function clearAll() {
 	document.getElementById('anchorMetadataTokenResult').value = "";
 	document.getElementById('anchorMetadataTokenTitle').value = "";
 	document.getElementById('anchorMetadataTokenSolidURLResult').innerHTML = "";
+
 	// prepopulate the token icon with the default
 	document.getElementById('tokenName').value = "";
 	document.getElementById('tokenDescription').value = "";
