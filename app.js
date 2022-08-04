@@ -981,7 +981,6 @@ async function readTokenMetadata(anchor, options) {
 		//alert("Please switch networks. This data was anchored on: "+anchor.network.name);
 		//throw new Error("Wrong network detected to validate against");
 		await switchNetwork(anchor.network);
-
 	}
 
 	const validateResult = document.getElementById('validateResult');
@@ -1031,6 +1030,11 @@ async function readTokenMetadata(anchor, options) {
 			// get the block for the timestamp
 			const block = await provider.getBlock(receipt.blockNumber);
 			dataObj.theCreationTime = block.timestamp;
+
+			// add the network to the reply.
+			if (anchor.network) {
+				dataObj.network = anchor.network;
+			}
 
 			tokencache[contractAddress] = {};
 			tokencache[contractAddress][anchor.tokenId] = dataObj;
@@ -1283,6 +1287,11 @@ async function readMerQLAnchorContract(anchor, option) {
 		dataObj.transactionAccount = receipt.from;
 		dataObj.transactionContractAddress = receipt.contractAddress;
 
+		// add the network to the reply.
+		if (anchor.network) {
+			dataObj.network = anchor.network;
+		}
+
 		contractcache[contractAddress] = dataObj;
 
 		return dataObj;
@@ -1471,6 +1480,7 @@ async function validate() {
 			} else if (anchor.type == "RDFTokens") {
 				reply = await readTokenMetadata(anchor, options);
 			}
+			//console.log(reply);
 
 			return reply;
 		}
