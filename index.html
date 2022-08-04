@@ -38,10 +38,10 @@
 
 			<ul class="nav nav-tabs" id="thedemotabs">
 				<li class="nav-item">
-					<a href="#connect" class="nav-link active" data-bs-toggle="pill" onclick="tabClick();">1. Connect</a>
+					<a href="#connect" class="nav-link active" data-bs-toggle="pill" onclick="tabClick();">1. Connect <!--span class="arrow">→</span--></a>
 				</li>
 				<li class="nav-item">
-					<a href="#metadata" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">2. Create Metadata</a>
+					<a href="#metadata" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">2. Create Metadata</span></a>
 				</li>
 				<li class="nav-item">
 					<a href="#anchor" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">3a. Anchor Metadata with MerQL Contract </a>
@@ -67,7 +67,7 @@
 
 				<div class="tab-pane fade show active" id="connect">
 					<div class="panel" style="clear:both; float: left;margin-top:20px;">
-						<h3>Connect to MetaMask (Select Rinkby Network)</h3>
+						<h3>Connect to MetaMask (Select a Test Network)</h3>
 						<br />
 						<button class="buttonmetamask" name="enableEthereumButton" id="enableEthereumButton" disabled="false">Connect to MetaMask</button>
 						<label for="ethereumaccount">Ethereum Account: </label>
@@ -115,7 +115,7 @@
 						<button class="buttonsolid" disabled="true" name="readSolidDataButton" id="readSolidDataButton">Read File from Solid</button>
 
 						<br /><br />
-						<label for="fileoftriples">RDF Input</label>
+						<label for="inputarea">RDF Input</label>
 						<br />
 						<textarea name="inputarea" id="inputarea" class="textareastyle"></textarea>
 						<br /><br />
@@ -205,8 +205,13 @@
 						<br /><br />
 						<label for="tokenImageURL">Token Image URL to represent the RDF Dataset you are anchoring:</label><br />
 						<input type="text" id="tokenImageURL" name="tokenImageURL" size="100" title="A url to an image for this RDF dataset Token - We prefill with a default one for you, so this is optional to add" />
-						<br /><br />
+						<br /><br /><br />
 
+						<label for="networks">Which token Contract?</label>
+						<select name="networks" id="networks">
+						</select>
+
+						<br /><br /><br />
 
 						<button class="buttonmetamask" id="anchorMetadataTokenButton" disabled="true">Anchor Verification Metadata to Blockchain</button>
 						<br /><br />

@@ -41,6 +41,614 @@ let tokencache = {};
 let contractcache = {};
 
 
+
+/**
+ * Initialise buttons clicks, metmask / ethereum etc.
+ */
+async function initLinkchain() {
+
+	totalTabs = document.getElementById("thedemotabs").getElementsByTagName("li").length;
+
+	// reference linkchains
+	linkchains = window.linkchains();
+	console.log(linkchains);
+
+	// connect this webpage to ethereum through metamask
+	setUpEthereumAndMetamask();
+
+	// prepopulate the network selection
+	const networkSelect = document.getElementById('networks');
+	const availableNetworks = cfg.tokenContractAddresses;
+
+	let option, next;
+	let count = availableNetworks.length;
+	option = document.createElement('option');
+	option.setAttribute('value', 'none');
+	option.appendChild(document.createTextNode("Select which network to publish to"));
+	networkSelect.appendChild(option);
+
+	for (let i=0; i < count; i++) {
+		next = availableNetworks[i];
+	    option = document.createElement('option');
+	    option.setAttribute('value', next.tokenContractAddress);
+	    option.appendChild(document.createTextNode(next.network));
+	    networkSelect.appendChild(option);
+	}
+
+	await selectNetwork();
+
+	// prepopulate the token icon with the default
+	document.getElementById('tokenImageURL').value = cfg.tokenIconURL;
+
+	// detect change of solid pod url and update various urls stubs and local storage
+	const podURLInput = document.getElementById("PodURL");
+	podURLInput.onchange = function() {
+		let data = this.value;
+		if (data == "") {
+			data = '<span style="color:gray">Please add Solid Pod URL on tab 1</span>';
+		}
+
+		document.getElementById("verificationMetadataStub").innerHTML = data;
+		document.getElementById("anchorMetadataStub").innerHTML = data;
+		document.getElementById("anchorMetadataTokenStub").innerHTML = data;
+		document.getElementById("granularVerificationMetadataStub").innerHTML = data;
+
+		localStorage.setItem("podurl", data);
+	};
+
+	// pull out of storage the previously saved podurl
+	if (localStorage.getItem("podurl")) {
+		podURLInput.value = localStorage.getItem("podurl");
+		podURLInput.onchange();
+	}
+
+
+	/**** WIRE UP BUTTON ON CLICK FUNCTIONS *****/
+
+	const ethereumButton = document.getElementById('enableEthereumButton');
+	ethereumButton.onclick = async function() {
+		loginToMetaMask();
+	};
+
+	/* BUTTONS THAT READ IN A LOCAL FILE */
+
+	const readFileDataButton = document.querySelector("#readFileDataButton");
+	readFileDataButton.onclick = function() {
+		readLocalInputData('fileoftriples', 'inputarea', ['anchoredRDFInputArea', 'validateRDFInputArea', 'validateGranularRDFInputArea']);
+	};
+
+	const readVerificationMetadataFileButton = document.querySelector("#readVerificationMetadataFileButton");
+	readVerificationMetadataFileButton.onclick = async function() {
+		readLocalInputData('verificationMetadataFile', 'verificationmetadatainputarea', []);
+	};
+
+	// Granular
+	const granularRDFInputFileButton = document.querySelector("#granularRDFInputFileButton");
+	granularRDFInputFileButton.onclick = async function() {
+		readLocalInputData('granularRDFInputFile', 'anchoredRDFInputArea', []);
+	};
+
+	const anchoredMetadataInputAreaButton = document.querySelector("#anchoredMetadataInputAreaButton");
+	anchoredMetadataInputAreaButton.onclick = async function() {
+		readLocalInputData('anchoredMetadataInputAreaFile', 'anchoredMetadataInputArea', []);
+	};
+
+	// Validation
+	const validateRDFInputFileButton = document.querySelector("#validateRDFInputFileButton");
+	validateRDFInputFileButton.onclick = async function() {
+		readLocalInputData('validateRDFInputFile', 'validateRDFInputArea', []);
+	};
+
+	const validateAnchoredMetadataInputFileButton = document.querySelector("#validateAnchoredMetadataInputFileButton");
+	validateAnchoredMetadataInputFileButton.onclick = async function() {
+		readLocalInputData('validateAnchoredMetadataInputFile', 'anchoredMetadataValidationInputArea', []);
+	};
+
+	// Granular Validation
+	const validateGranularRDFInputButton = document.querySelector("#validateGranularRDFInputButton");
+	validateGranularRDFInputButton.onclick = async function() {
+		readLocalInputData('validateGranularRDFInputFile', 'validateGranularRDFInputArea', []);
+	};
+
+	const granularMetadataValidationInputButton = document.querySelector("#granularMetadataValidationInputButton");
+	granularMetadataValidationInputButton.onclick = async function() {
+		readLocalInputData('granularMetadataValidationInputFile', 'granularMetadataValidationInputArea', []);
+	};
+
+	/* LINKCHAIN RELATED BUTTONS */
+
+	const verificationMetaDataButton = document.getElementById('verificationMetadataButton');
+	verificationMetaDataButton.onclick = function() {
+		getVerificationMetadata();
+	};
+
+	const anchorMetadataButton = document.getElementById('anchorMetadataButton');
+	anchorMetadataButton.onclick = function() {
+		anchorMetadata();
+	};
+
+	const anchorMetadataTokenButton = document.getElementById('anchorMetadataTokenButton');
+	anchorMetadataTokenButton.onclick = function() {
+		anchorMetadataWithToken();
+	};
+
+	const granularVerificationMetaDataButton = document.getElementById('granularVerificationMetadataButton');
+	granularVerificationMetaDataButton.onclick = function() {
+		getGranularVerificationMetadata();
+	};
+
+	const validateButton = document.getElementById('validateButton');
+	validateButton.onclick = function() {
+		validate();
+	};
+
+	const validateGranularButton = document.getElementById('validateGranularButton');
+	validateGranularButton.onclick = function() {
+		validateGranular();
+	};
+
+	// ADMIN - ISSUE TOKEN CONTRACT INSTANCE
+	const tokenContractButton = document.getElementById('tokenContractButton');
+	tokenContractButton.onclick = async function() {
+		let result = await deployTokenAnchorContract('tokenContractOutput');
+		document.getElementById('tokenContractOutput').value = JSON.stringify(result, null, 2);
+	};
+
+	//const clearButton = document.getElementById('clearButton');
+	//clearButton.onclick = function() {
+	//	clearAll();
+	//};
+
+	/* NAVIGATION BUTTONS */
+
+	const nextButton = document.getElementById('ntxbtn');
+	nextButton.onclick = function(e) {
+		try {
+			e.preventDefault();
+
+			const acollection = document.getElementsByClassName("nav-link active"); // currently active tab anchor - should only be 1
+			const currentLi = acollection[0].parentElement;
+			const nextLi = currentLi.nextElementSibling;
+			const nodes = Array.prototype.slice.call( document.getElementById('thedemotabs').children );
+			currentTab = nodes.indexOf(currentLi);
+			currentTab +=1;
+
+			if (nextLi != null) {
+				nextLi.firstElementChild.click();
+			}
+
+			showHideControls();
+		} catch (error) {
+			console.log(e);
+		}
+	};
+
+	const previousButton = document.getElementById('prevbtn');
+	previousButton.onclick = function(e) {
+
+		try {
+			e.preventDefault();
+
+			const acollection = document.getElementsByClassName("nav-link active"); // currently active tab anchor - should only be 1
+			const currentLi = acollection[0].parentElement;
+			const previousLi = currentLi.previousElementSibling;
+			const nodes = Array.prototype.slice.call( document.getElementById('thedemotabs').children );
+			currentTab = nodes.indexOf(previousLi);
+			currentTab -=1;
+
+			if (previousLi != null) {
+				previousLi.firstElementChild.click();
+			}
+
+			showHideControls();
+		} catch (error) {
+			console.log(e);
+		}
+	};
+
+
+	/* INRUPT/SOLID RELATED BUTTONS */
+
+	/* Tab to connect to Solid and view files */
+
+	const solidLoginButton = document.querySelector("#solidLoginButton");
+	solidLoginButton.onclick = function() {
+		Inrupt.startSolidLogin();
+	};
+
+	const solidLogoutButton = document.querySelector("#solidLogoutButton");
+	solidLogoutButton.onclick = function() {
+		Inrupt.solidLogout();
+	};
+
+	const readFileFromSolidButton = document.querySelector("#readFileFromSolidButton");
+	readFileFromSolidButton.onclick = async function() {
+		try {
+			const podUrl = document.getElementById("PodURL").value;
+			const allFolderArray = await Inrupt.loadFolderContentList(podUrl);
+
+			const filesArea = document.getElementById("filesArea");
+			let allFiles = ""
+			allFolderArray.forEach(function(filename) {
+				allFiles += filename+'\n';
+			});
+
+			filesArea.value = allFiles;
+
+		} catch (error) {
+			console.log(error);
+			alert(error.message);
+		}
+	};
+
+
+	/* Tab to get Verification Metadata for some RDF Input */
+
+	const readSolidDataButton = document.querySelector("#readSolidDataButton");
+	readSolidDataButton.onclick = async function() {
+		const fileURL = document.getElementById("solidFileURL").value;
+		const file = await Inrupt.readFileFromPod(fileURL);
+
+		//console.log(file);
+
+		let reader = new FileReader();
+		reader.readAsText(file);
+		reader.onload = function() {
+			console.log(reader.result);
+			const inputarea = document.getElementById('inputarea');
+			inputarea.value = reader.result;
+		};
+	};
+
+	const saveFileDataButton = document.querySelector("#saveFileDataButton");
+	saveFileDataButton.onclick = async function() {
+		try {
+			const podUrl = document.getElementById("PodURL").value;
+			const file = document.getElementById('fileoftriples').files[0];
+			if (file) {
+				const filePodURL = podUrl+file.name;
+				await Inrupt.writeFileToPod(file, `${filePodURL}`);
+				const solidFileURLField = document.getElementById("solidFileURL").value = filePodURL;
+			}
+		} catch (error) {
+			console.log(error);
+			alert(error.message);
+		}
+	}
+
+	const storeVerificationMetadataButton = document.querySelector("#storeVerificationMetadataButton");
+	storeVerificationMetadataButton.onclick = async function() {
+		try {
+			const data = document.getElementById("verificationMetadataResult").value;
+			if (data == "") {
+				alert("Please load some data into the textarea to store to solid");
+				return;
+			}
+			const title =  document.getElementById("verificationMetadataTitle").value;
+			if (title == "") {
+				alert("Please give this dataset a title to use in Solid");
+				return;
+			}
+
+			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
+			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
+			const filetype = 'text/plain'; // must be this or fails - no idea why
+			const blob = new Blob([data], { type: filetype });
+			const file = new File([blob], filename, { type: filetype });
+			const fileurl = await Inrupt.writeFileToPod(file, pathToStore);
+
+			document.getElementById("verificationMetadataSolidURLResult").innerHTML = fileurl;
+			document.getElementById("verificationMetadataInputURL").value = fileurl;
+			document.getElementById("verificationMetadataTokenInputURL").value = fileurl;
+		} catch (error) {
+			console.log(error);
+			alert(error.message);
+		}
+	};
+
+	/* Tab to Anchor Verification Metadata to the Blockchain */
+
+	const saveVerificationMetadataFileButton = document.querySelector("#saveVerificationMetadataFileButton");
+	saveVerificationMetadataFileButton.onclick = async function() {
+		try {
+			const podUrl = document.getElementById("PodURL").value;
+			const file = document.getElementById('verificationMetadataFile').files[0];
+			if (file) {
+				const filePodURL = podUrl+file.name;
+				await Inrupt.writeFileToPod(file, `${filePodURL}`);
+				const solidFileURLField = document.getElementById("verificationMetadataInputURL").value = filePodURL;
+			}
+		} catch (error) {
+			console.log(error);
+			alert(error.message);
+		}
+	}
+
+	const readVerificationMetadataButton = document.querySelector("#readVerificationMetadataButton");
+	readVerificationMetadataButton.onclick = async function() {
+		const fileURL = document.getElementById("verificationMetadataInputURL").value;
+		const file = await Inrupt.readFileFromPod(fileURL);
+
+		let reader = new FileReader();
+		reader.readAsText(file);
+		reader.onload = function() {
+			const inputarea = document.getElementById('verificationmetadatainputarea');
+			inputarea.value = reader.result;
+		};
+	}
+
+	const storeAnchorMetadataButton = document.querySelector("#storeAnchorMetadataButton");
+	storeAnchorMetadataButton.onclick = async function() {
+		try {
+			const data = document.getElementById("anchorMetadataResult").value;
+			if (data == "") {
+				alert("Please load some data into the textarea to store to solid");
+				return;
+			}
+			const title =  document.getElementById("anchorMetadataTitle").value;
+			if (title == "") {
+				alert("Please give this dataset a title to use in Solid");
+				return;
+			}
+
+			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
+			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
+			const filetype = 'text/plain'; // must be this or fails - no idea why
+			const blob = new Blob([data], { type: filetype });
+			const file = new File([blob], filename, { type: filetype });
+			const fileurl = await Inrupt.writeFileToPod(file, pathToStore);
+
+			document.getElementById("anchorMetadataSolidURLResult").innerHTML = fileurl;
+			document.getElementById("anchoredMetadataInputURL").value = fileurl;
+		} catch (error) {
+			console.log(error);
+			alert(error.message);
+		}
+	};
+
+	/* Tab to Anchor Verification Metadata to the Blockchain with Tokens */
+
+	const saveVerificationMetadataTokenFileButton = document.querySelector("#saveVerificationMetadataTokenFileButton");
+	saveVerificationMetadataTokenFileButton.onclick = async function() {
+		try {
+			const podUrl = document.getElementById("PodURL").value;
+			const file = document.getElementById('verificationMetadataTokenFile').files[0];
+			if (file) {
+				const filePodURL = podUrl+file.name;
+				await Inrupt.writeFileToPod(file, `${filePodURL}`);
+				const solidFileURLField = document.getElementById("verificationMetadataTokenInputURL").value = filePodURL;
+			}
+		} catch (error) {
+			console.log(error);
+			alert(error.message);
+		}
+	}
+
+	const readVerificationMetadataTokenButton = document.querySelector("#readVerificationMetadataTokenButton");
+	readVerificationMetadataTokenButton.onclick = async function() {
+		const fileURL = document.getElementById("verificationMetadataTokenInputURL").value;
+		const file = await Inrupt.readFileFromPod(fileURL);
+
+		let reader = new FileReader();
+		reader.readAsText(file);
+		reader.onload = function() {
+			const inputarea = document.getElementById('verificationMetadataTokenInputArea');
+			inputarea.value = reader.result;
+		};
+	}
+
+	const storeAnchorMetadataTokenButton = document.querySelector("#storeAnchorMetadataTokenButton");
+	storeAnchorMetadataTokenButton.onclick = async function() {
+		try {
+			const data = document.getElementById("anchorMetadataTokenResult").value;
+			if (data == "") {
+				alert("Please load some data into the textarea to store to solid");
+				return;
+			}
+			const title =  document.getElementById("anchorMetadataTokenTitle").value;
+			if (title == "") {
+				alert("Please give this dataset a title to use in Solid");
+				return;
+			}
+
+			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
+			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
+			const filetype = 'text/plain'; // must be this or fails - no idea why
+			const blob = new Blob([data], { type: filetype });
+			const file = new File([blob], filename, { type: filetype });
+			const fileurl = await Inrupt.writeFileToPod(file, pathToStore);
+
+			document.getElementById("anchorMetadataTokenSolidURLResult").innerHTML = fileurl;
+			document.getElementById("anchoredMetadataInputURL").value = fileurl;
+		} catch (error) {
+			console.log(error);
+			alert(error.message);
+		}
+	};
+
+	/* Tab to get Granular Metadata to allow per triple/quad verification */
+
+	const readAnchoredRDFInputButton = document.querySelector("#readAnchoredRDFInputButton");
+	readAnchoredRDFInputButton.onclick = async function() {
+		const fileURL = document.getElementById("anchoredRDFInputURL").value;
+
+		const file = await Inrupt.readFileFromPod(fileURL);
+
+		let reader = new FileReader();
+		reader.readAsText(file);
+		reader.onload = function() {
+			const inputarea = document.getElementById('anchoredRDFInputArea');
+			inputarea.value = reader.result;
+		};
+	}
+
+	const readAnchoredMetadataButton = document.querySelector("#readAnchoredMetadataButton");
+	readAnchoredMetadataButton.onclick = async function() {
+		const fileURL = document.getElementById("anchoredMetadataInputURL").value;
+
+		const file = await Inrupt.readFileFromPod(fileURL);
+
+		let reader = new FileReader();
+		reader.readAsText(file);
+		reader.onload = function() {
+			const inputarea = document.getElementById('anchoredMetadataInputArea');
+			inputarea.value = reader.result;
+		};
+	}
+
+	const storeGanularMetadataButton = document.querySelector("#storeGanularMetadataButton");
+	storeGanularMetadataButton.onclick = async function() {
+		try {
+			const data = document.getElementById("granularVerificationMetadataResult").value;
+			if (data == "") {
+				alert("Please load some data into the textarea to store to solid");
+				return;
+			}
+			const title =  document.getElementById("granularVerificationMetadataTitle").value;
+			if (title == "") {
+				alert("Please give this dataset a title to use in Solid");
+				return;
+			}
+
+			let filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
+			filename = filename+'.jsonld';
+			const pathToStore = document.getElementById("PodURL").value+filename;
+			const filetype = 'text/plain'; // must be this or fails - no idea why
+			const blob = new Blob([data], { type: filetype });
+			const file = new File([blob], filename, { type: filetype });
+
+			const fileurl = await Inrupt.writeFileToPod(file, pathToStore);
+
+			document.getElementById("granularVerificationMetadataSolidURLResult").innerHTML = fileurl;
+		} catch (error) {
+			console.log(error);
+			alert(error.message);
+		}
+	};
+
+	/* Tab to Validate with anchored metadata */
+
+	const readValidateRDFInputButton = document.querySelector("#readValidateRDFInputButton");
+	readValidateRDFInputButton.onclick = async function() {
+		const fileURL = document.getElementById("validateRDFInputURL").value;
+		const file = await Inrupt.readFileFromPod(fileURL);
+		let reader = new FileReader();
+		reader.readAsText(file);
+		reader.onload = function() {
+			const inputarea = document.getElementById('validateRDFInputArea');
+			inputarea.value = reader.result;
+		};
+	}
+
+	const readAnchoredMetadataValidationButton = document.querySelector("#readAnchoredMetadataValidationButton");
+	readAnchoredMetadataValidationButton.onclick = async function() {
+		const fileURL = document.getElementById("validateAnchoredMetadataInputURL").value;
+		const file = await Inrupt.readFileFromPod(fileURL);
+
+		let reader = new FileReader();
+		reader.readAsText(file);
+		reader.onload = function() {
+			const inputarea = document.getElementById('anchoredMetadataValidationInputArea');
+			inputarea.value = reader.result;
+		};
+	}
+
+	/* Tab to Validate with Granular metadata */
+
+	const readValidateGranularRDFInputButton = document.querySelector("#readValidateGranularRDFInputButton");
+	readValidateGranularRDFInputButton.onclick = async function() {
+		const fileURL = document.getElementById("validateGranularRDFInputURL").value;
+		const file = await Inrupt.readFileFromPod(fileURL);
+
+		let reader = new FileReader();
+		reader.readAsText(file);
+		reader.onload = function() {
+			const inputarea = document.getElementById('validateGranularRDFInputArea');
+			inputarea.value = reader.result;
+		};
+	}
+
+
+	const readGranularMetadataValidationButton = document.querySelector("#readGranularMetadataValidationButton");
+	readGranularMetadataValidationButton.onclick = async function() {
+		const fileURL = document.getElementById("validateGranularMetadataInputURL").value;
+		const file = await Inrupt.readFileFromPod(fileURL);
+
+		let reader = new FileReader();
+		reader.readAsText(file);
+		reader.onload = function() {
+			const inputarea = document.getElementById('granularMetadataValidationInputArea');
+			inputarea.value = reader.result;
+		};
+	}
+}
+
+/**
+ * Setup ethereum and metmask.
+ */
+async function setUpEthereumAndMetamask() {
+
+	try {
+		ethereum = window.ethereum;
+
+		// A Web3Provider wraps a standard Web3 provider, which is
+		// what MetaMask injects as window.ethereum into each page
+		provider = new ethers.providers.Web3Provider(window.ethereum)
+		console.log('provider:', provider);
+
+		// The MetaMask plugin also allows signing transactions to
+		// send ether and pay to change state within the blockchain.
+		// For this, you need the account signer...
+		signer = provider.getSigner();
+		console.log('signer:', signer);
+
+		// Check if logged into MetaMask already
+		if (typeof ethereum !== 'undefined') {
+
+			// detect Network change and reassign provider and signer, and reselect contract
+			ethereum.on('chainChanged', async function() {
+				provider = new ethers.providers.Web3Provider(window.ethereum)
+				console.log('provider:', provider);
+				signer = provider.getSigner();
+				console.log('signer:', signer);
+				await selectNetwork();
+			});
+
+			// detect an account change
+			ethereum.on("accountsChanged", () => {
+				if (account != ethereum.selectedAddress) {
+					account = ethereum.selectedAddress;
+					document.getElementById('ethereumaccount').innerHTML = account;
+				}
+			});
+
+			if (ethereum.isMetaMask) {
+				console.log('MetaMask is installed');
+			}
+
+			console.log("ethereum.networkVersion: " + ethereum.networkVersion);
+			console.log("ethereum.selectedAddress: " + ethereum.selectedAddress);
+
+			if (ethereum.selectedAddress == "" || ethereum.selectedAddress == null) {
+				const button = document.getElementById('enableEthereumButton');
+				button.disabled = false;
+			} else {
+				const button = document.getElementById('enableEthereumButton');
+				button.disabled = true;
+				enableMetaMaskButtons();
+				account = ethereum.selectedAddress;
+				document.getElementById('ethereumaccount').innerHTML = account;
+			}
+		} else {
+			const button = document.getElementById('enableEthereumButton');
+			button.disabled = false;
+			console.log('MetaMask needs to be installed');
+		}
+	} catch (e) {
+		throw e;
+	}
+}
+
 /**
  * Start the metamask extension for user to login.
  */
@@ -54,10 +662,46 @@ async function loginToMetaMask() {
 
 		enableMetaMaskButtons();
 
+		await selectNetwork();
+
 		account = ethereum.selectedAddress;
 		document.getElementById('ethereumaccount').innerHTML = account;
 	} else {
 		alert("Please select a MetaMask account to use with this page");
+	}
+}
+
+async function selectNetwork() {
+	try {
+		const networkSelect = document.getElementById('networks');
+
+		const currentNetwork = await getNetworkName();
+		const matchName = currentNetwork.charAt(0).toUpperCase() + currentNetwork.slice(1);
+
+		for(var i=0; i<networkSelect.options.length; i++) {
+			if ( networkSelect.options[i].text == matchName ) {
+				networkSelect.selectedIndex = i;
+				break;
+			}
+		}
+	} catch (e) {
+		// just show the two there are, with non selected.
+		console.log(e);
+	}
+}
+
+async function getNetworkName() {
+	try {
+		// get the chain id of the current blockchain your wallet is pointing at.
+		const chainId = await signer.getChainId();
+		//console.log(chainId);
+
+		// get the network details for the given chain id.
+		const network = await provider.getNetwork(chainId);
+
+		return network.name;
+	} catch (e) {
+		throw e;
 	}
 }
 
@@ -434,11 +1078,21 @@ async function anchorMetadataWithToken() {
 			return;
 		}
 
+		let tokenContractAddress = cfg.tokenContractAddress; // the default one - Rinkeby
+		// get it from the selector
+		const networkSelect = document.getElementById('networks');
+		if (networkSelect.value != "none") {
+			tokenContractAddress = networkSelect.value;
+		} else {
+			alert("please select the network to issue to");
+			return;
+		}
+
 		const anchorMetadataResult = document.getElementById('anchorMetadataTokenResult');
 		granularVerificationMetadataResult.value = "Depending on the input size, this can take a while. Please wait while processing..."
 
 		let options = {
-			address: cfg.tokenContractAddress,
+			address: tokenContractAddress,
 			account: account,
 			transactionHash:"0x0x0000000000000000000000000000000000000000",
 			anchorType : 'RDFTokens',
@@ -954,6 +1608,8 @@ function clearAll() {
 	document.getElementById('validateGranularResult').value = "";
 }
 
+// Forward and Back buttons
+
 var totalTabs = 0;
 var currentTab = 0;
 
@@ -978,552 +1634,5 @@ function showHideControls(){
 	}
 	if (currentTab == (totalTabs-1)){
 		nextButton.style.display = "none";
-	}
-}
-
-/**
- * Initialise buttons and web3 etc.
- */
-function initLinkchain() {
-
-	totalTabs = document.getElementById("thedemotabs").getElementsByTagName("li").length;
-
-	linkchains = window.linkchains();
-	console.log(linkchains);
-
-	ethereum = window.ethereum;
-
-	// A Web3Provider wraps a standard Web3 provider, which is
-	// what MetaMask injects as window.ethereum into each page
-	provider = new ethers.providers.Web3Provider(window.ethereum)
-	console.log('provider:', provider);
-
-	// The MetaMask plugin also allows signing transactions to
-	// send ether and pay to change state within the blockchain.
-	// For this, you need the account signer...
-	signer = provider.getSigner();
-	console.log('signer:', signer);
-
-	// Check if logged into MetaMask already
-	if (typeof ethereum !== 'undefined') {
-
-		if (ethereum.isMetaMask) {
-			console.log('MetaMask is installed');
-		}
-
-		console.log("ethereum.networkVersion: " + ethereum.networkVersion);
-		console.log("ethereum.selectedAddress: " + ethereum.selectedAddress);
-
-		if (ethereum.selectedAddress == "" || ethereum.selectedAddress == null) {
-			const button = document.getElementById('enableEthereumButton');
-			button.disabled = false;
-		} else {
-			const button = document.getElementById('enableEthereumButton');
-			button.disabled = true;
-			enableMetaMaskButtons();
-			account = ethereum.selectedAddress;
-			document.getElementById('ethereumaccount').innerHTML = account;
-		}
-	} else {
-		const button = document.getElementById('enableEthereumButton');
-		button.disabled = false;
-		console.log('MetaMask needs to be installed');
-	}
-
-	// prepopulate the token icon with the default
-	document.getElementById('tokenImageURL').value = cfg.tokenIconURL;
-
-	const podURLInput = document.getElementById("PodURL");
-	podURLInput.onchange = function() {
-
-		let data = this.value;
-		if (data == "") {
-			data = '<span style="color:gray">Please add Solid Pod URL on tab 1</span>';
-		}
-
-		document.getElementById("verificationMetadataStub").innerHTML = data;
-		document.getElementById("anchorMetadataStub").innerHTML = data;
-		document.getElementById("anchorMetadataTokenStub").innerHTML = data;
-		document.getElementById("granularVerificationMetadataStub").innerHTML = data;
-
-		localStorage.setItem("podurl", data);
-	};
-	// pull out of storage the previously saved podurl
-	if (localStorage.getItem("podurl")) {
-		podURLInput.value = localStorage.getItem("podurl");
-		podURLInput.onchange();
-	}
-
-	// READ IN LOCAL FILES
-	const readFileDataButton = document.querySelector("#readFileDataButton");
-	readFileDataButton.onclick = function() {
-		readLocalInputData('fileoftriples', 'inputarea', ['anchoredRDFInputArea', 'validateRDFInputArea', 'validateGranularRDFInputArea']);
-	};
-
-	const readVerificationMetadataFileButton = document.querySelector("#readVerificationMetadataFileButton");
-	readVerificationMetadataFileButton.onclick = async function() {
-		readLocalInputData('verificationMetadataFile', 'verificationmetadatainputarea', []);
-	};
-
-	// Granular
-	const granularRDFInputFileButton = document.querySelector("#granularRDFInputFileButton");
-	granularRDFInputFileButton.onclick = async function() {
-		readLocalInputData('granularRDFInputFile', 'anchoredRDFInputArea', []);
-	};
-
-	const anchoredMetadataInputAreaButton = document.querySelector("#anchoredMetadataInputAreaButton");
-	anchoredMetadataInputAreaButton.onclick = async function() {
-		readLocalInputData('anchoredMetadataInputAreaFile', 'anchoredMetadataInputArea', []);
-	};
-
-
-	// Validation
-	const validateRDFInputFileButton = document.querySelector("#validateRDFInputFileButton");
-	validateRDFInputFileButton.onclick = async function() {
-		readLocalInputData('validateRDFInputFile', 'validateRDFInputArea', []);
-	};
-
-	const validateAnchoredMetadataInputFileButton = document.querySelector("#validateAnchoredMetadataInputFileButton");
-	validateAnchoredMetadataInputFileButton.onclick = async function() {
-		readLocalInputData('validateAnchoredMetadataInputFile', 'anchoredMetadataValidationInputArea', []);
-	};
-
-	// Granular Validation
-	const validateGranularRDFInputButton = document.querySelector("#validateGranularRDFInputButton");
-	validateGranularRDFInputButton.onclick = async function() {
-		readLocalInputData('validateGranularRDFInputFile', 'validateGranularRDFInputArea', []);
-	};
-
-	const granularMetadataValidationInputButton = document.querySelector("#granularMetadataValidationInputButton");
-	granularMetadataValidationInputButton.onclick = async function() {
-		readLocalInputData('granularMetadataValidationInputFile', 'granularMetadataValidationInputArea', []);
-	};
-
-	const ethereumButton = document.getElementById('enableEthereumButton');
-	ethereumButton.onclick = async function() {
-		loginToMetaMask();
-	};
-
-	const verificationMetaDataButton = document.getElementById('verificationMetadataButton');
-	verificationMetaDataButton.onclick = function() {
-		getVerificationMetadata();
-	};
-
-	const anchorMetadataButton = document.getElementById('anchorMetadataButton');
-	anchorMetadataButton.onclick = function() {
-		anchorMetadata();
-	};
-
-	const anchorMetadataTokenButton = document.getElementById('anchorMetadataTokenButton');
-	anchorMetadataTokenButton.onclick = function() {
-		anchorMetadataWithToken();
-	};
-
-	const granularVerificationMetaDataButton = document.getElementById('granularVerificationMetadataButton');
-	granularVerificationMetaDataButton.onclick = function() {
-		getGranularVerificationMetadata();
-	};
-
-	const validateButton = document.getElementById('validateButton');
-	validateButton.onclick = function() {
-		validate();
-	};
-
-	const validateGranularButton = document.getElementById('validateGranularButton');
-	validateGranularButton.onclick = function() {
-		validateGranular();
-	};
-
-	// ADMIN
-	const tokenContractButton = document.getElementById('tokenContractButton');
-	tokenContractButton.onclick = async function() {
-		let result = await deployTokenAnchorContract('tokenContractOutput');
-		document.getElementById('tokenContractOutput').value = JSON.stringify(result, null, 2);
-	};
-
-	//const clearButton = document.getElementById('clearButton');
-	//clearButton.onclick = function() {
-	//	clearAll();
-	//};
-
-	const nextButton = document.getElementById('ntxbtn');
-	nextButton.onclick = function(e) {
-		try {
-			e.preventDefault();
-
-			const acollection = document.getElementsByClassName("nav-link active"); // currently active tab anchor - should only be 1
-			const currentLi = acollection[0].parentElement;
-			const nextLi = currentLi.nextElementSibling;
-			const nodes = Array.prototype.slice.call( document.getElementById('thedemotabs').children );
-			currentTab = nodes.indexOf(currentLi);
-			currentTab +=1;
-
-			if (nextLi != null) {
-				nextLi.firstElementChild.click();
-			}
-
-			showHideControls();
-		} catch (error) {
-			console.log(e);
-		}
-	};
-
-	const previousButton = document.getElementById('prevbtn');
-	previousButton.onclick = function(e) {
-
-		try {
-			e.preventDefault();
-
-			const acollection = document.getElementsByClassName("nav-link active"); // currently active tab anchor - should only be 1
-			const currentLi = acollection[0].parentElement;
-			const previousLi = currentLi.previousElementSibling;
-			const nodes = Array.prototype.slice.call( document.getElementById('thedemotabs').children );
-			currentTab = nodes.indexOf(previousLi);
-			currentTab -=1;
-
-			if (previousLi != null) {
-				previousLi.firstElementChild.click();
-			}
-
-			showHideControls();
-		} catch (error) {
-			console.log(e);
-		}
-	};
-
-
-	/**** INRUPT/SOLID RELATED BUTTONS *****/
-
-	/** Tab to connect to Solid and view files **/
-
-	const solidLoginButton = document.querySelector("#solidLoginButton");
-	solidLoginButton.onclick = function() {
-		Inrupt.startSolidLogin();
-	};
-
-	const solidLogoutButton = document.querySelector("#solidLogoutButton");
-	solidLogoutButton.onclick = function() {
-		Inrupt.solidLogout();
-	};
-
-	const readFileFromSolidButton = document.querySelector("#readFileFromSolidButton");
-	readFileFromSolidButton.onclick = async function() {
-		try {
-			const podUrl = document.getElementById("PodURL").value;
-			const allFolderArray = await Inrupt.loadFolderContentList(podUrl);
-
-			const filesArea = document.getElementById("filesArea");
-			let allFiles = ""
-			allFolderArray.forEach(function(filename) {
-				allFiles += filename+'\n';
-			});
-
-			filesArea.value = allFiles;
-
-		} catch (error) {
-			console.log(error);
-			alert(error.message);
-		}
-	};
-
-
-	/** Tab to get Verification Metadata for some RDF Input **/
-
-	const readSolidDataButton = document.querySelector("#readSolidDataButton");
-	readSolidDataButton.onclick = async function() {
-		const fileURL = document.getElementById("solidFileURL").value;
-		const file = await Inrupt.readFileFromPod(fileURL);
-
-		//console.log(file);
-
-		let reader = new FileReader();
-		reader.readAsText(file);
-		reader.onload = function() {
-			console.log(reader.result);
-			const inputarea = document.getElementById('inputarea');
-			inputarea.value = reader.result;
-		};
-	};
-
-	const saveFileDataButton = document.querySelector("#saveFileDataButton");
-	saveFileDataButton.onclick = async function() {
-		try {
-			const podUrl = document.getElementById("PodURL").value;
-			const file = document.getElementById('fileoftriples').files[0];
-			if (file) {
-				const filePodURL = podUrl+file.name;
-				await Inrupt.writeFileToPod(file, `${filePodURL}`);
-				const solidFileURLField = document.getElementById("solidFileURL").value = filePodURL;
-			}
-		} catch (error) {
-			console.log(error);
-			alert(error.message);
-		}
-	}
-
-	const storeVerificationMetadataButton = document.querySelector("#storeVerificationMetadataButton");
-	storeVerificationMetadataButton.onclick = async function() {
-		try {
-			const data = document.getElementById("verificationMetadataResult").value;
-			if (data == "") {
-				alert("Please load some data into the textarea to store to solid");
-				return;
-			}
-			const title =  document.getElementById("verificationMetadataTitle").value;
-			if (title == "") {
-				alert("Please give this dataset a title to use in Solid");
-				return;
-			}
-
-			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
-			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
-			const filetype = 'text/plain'; // must be this or fails - no idea why
-			const blob = new Blob([data], { type: filetype });
-			const file = new File([blob], filename, { type: filetype });
-			const fileurl = await Inrupt.writeFileToPod(file, pathToStore);
-
-			document.getElementById("verificationMetadataSolidURLResult").innerHTML = fileurl;
-			document.getElementById("verificationMetadataInputURL").value = fileurl;
-			document.getElementById("verificationMetadataTokenInputURL").value = fileurl;
-		} catch (error) {
-			console.log(error);
-			alert(error.message);
-		}
-	};
-
-	/** Tab to Anchor Verification Metadata to the Blockchain **/
-
-	const saveVerificationMetadataFileButton = document.querySelector("#saveVerificationMetadataFileButton");
-	saveVerificationMetadataFileButton.onclick = async function() {
-		try {
-			const podUrl = document.getElementById("PodURL").value;
-			const file = document.getElementById('verificationMetadataFile').files[0];
-			if (file) {
-				const filePodURL = podUrl+file.name;
-				await Inrupt.writeFileToPod(file, `${filePodURL}`);
-				const solidFileURLField = document.getElementById("verificationMetadataInputURL").value = filePodURL;
-			}
-		} catch (error) {
-			console.log(error);
-			alert(error.message);
-		}
-	}
-
-	const readVerificationMetadataButton = document.querySelector("#readVerificationMetadataButton");
-	readVerificationMetadataButton.onclick = async function() {
-		const fileURL = document.getElementById("verificationMetadataInputURL").value;
-		const file = await Inrupt.readFileFromPod(fileURL);
-
-		let reader = new FileReader();
-		reader.readAsText(file);
-		reader.onload = function() {
-			const inputarea = document.getElementById('verificationmetadatainputarea');
-			inputarea.value = reader.result;
-		};
-	}
-
-	const storeAnchorMetadataButton = document.querySelector("#storeAnchorMetadataButton");
-	storeAnchorMetadataButton.onclick = async function() {
-		try {
-			const data = document.getElementById("anchorMetadataResult").value;
-			if (data == "") {
-				alert("Please load some data into the textarea to store to solid");
-				return;
-			}
-			const title =  document.getElementById("anchorMetadataTitle").value;
-			if (title == "") {
-				alert("Please give this dataset a title to use in Solid");
-				return;
-			}
-
-			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
-			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
-			const filetype = 'text/plain'; // must be this or fails - no idea why
-			const blob = new Blob([data], { type: filetype });
-			const file = new File([blob], filename, { type: filetype });
-			const fileurl = await Inrupt.writeFileToPod(file, pathToStore);
-
-			document.getElementById("anchorMetadataSolidURLResult").innerHTML = fileurl;
-			document.getElementById("anchoredMetadataInputURL").value = fileurl;
-		} catch (error) {
-			console.log(error);
-			alert(error.message);
-		}
-	};
-
-	/** Tab to Anchor Verification Metadata to the Blockchain with Tokens **/
-
-	const saveVerificationMetadataTokenFileButton = document.querySelector("#saveVerificationMetadataTokenFileButton");
-	saveVerificationMetadataTokenFileButton.onclick = async function() {
-		try {
-			const podUrl = document.getElementById("PodURL").value;
-			const file = document.getElementById('verificationMetadataTokenFile').files[0];
-			if (file) {
-				const filePodURL = podUrl+file.name;
-				await Inrupt.writeFileToPod(file, `${filePodURL}`);
-				const solidFileURLField = document.getElementById("verificationMetadataTokenInputURL").value = filePodURL;
-			}
-		} catch (error) {
-			console.log(error);
-			alert(error.message);
-		}
-	}
-
-	const readVerificationMetadataTokenButton = document.querySelector("#readVerificationMetadataTokenButton");
-	readVerificationMetadataTokenButton.onclick = async function() {
-		const fileURL = document.getElementById("verificationMetadataTokenInputURL").value;
-		const file = await Inrupt.readFileFromPod(fileURL);
-
-		let reader = new FileReader();
-		reader.readAsText(file);
-		reader.onload = function() {
-			const inputarea = document.getElementById('verificationMetadataTokenInputArea');
-			inputarea.value = reader.result;
-		};
-	}
-
-	const storeAnchorMetadataTokenButton = document.querySelector("#storeAnchorMetadataTokenButton");
-	storeAnchorMetadataTokenButton.onclick = async function() {
-		try {
-			const data = document.getElementById("anchorMetadataTokenResult").value;
-			if (data == "") {
-				alert("Please load some data into the textarea to store to solid");
-				return;
-			}
-			const title =  document.getElementById("anchorMetadataTokenTitle").value;
-			if (title == "") {
-				alert("Please give this dataset a title to use in Solid");
-				return;
-			}
-
-			const filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
-			const pathToStore = document.getElementById("PodURL").value+filename+'.jsonld';
-			const filetype = 'text/plain'; // must be this or fails - no idea why
-			const blob = new Blob([data], { type: filetype });
-			const file = new File([blob], filename, { type: filetype });
-			const fileurl = await Inrupt.writeFileToPod(file, pathToStore);
-
-			document.getElementById("anchorMetadataTokenSolidURLResult").innerHTML = fileurl;
-			document.getElementById("anchoredMetadataInputURL").value = fileurl;
-		} catch (error) {
-			console.log(error);
-			alert(error.message);
-		}
-	};
-
-	/** Tab to get Granular Metadata to allow per triple/quad verification **/
-
-	const readAnchoredRDFInputButton = document.querySelector("#readAnchoredRDFInputButton");
-	readAnchoredRDFInputButton.onclick = async function() {
-		const fileURL = document.getElementById("anchoredRDFInputURL").value;
-
-		const file = await Inrupt.readFileFromPod(fileURL);
-
-		let reader = new FileReader();
-		reader.readAsText(file);
-		reader.onload = function() {
-			const inputarea = document.getElementById('anchoredRDFInputArea');
-			inputarea.value = reader.result;
-		};
-	}
-
-	const readAnchoredMetadataButton = document.querySelector("#readAnchoredMetadataButton");
-	readAnchoredMetadataButton.onclick = async function() {
-		const fileURL = document.getElementById("anchoredMetadataInputURL").value;
-
-		const file = await Inrupt.readFileFromPod(fileURL);
-
-		let reader = new FileReader();
-		reader.readAsText(file);
-		reader.onload = function() {
-			const inputarea = document.getElementById('anchoredMetadataInputArea');
-			inputarea.value = reader.result;
-		};
-	}
-
-	const storeGanularMetadataButton = document.querySelector("#storeGanularMetadataButton");
-	storeGanularMetadataButton.onclick = async function() {
-		try {
-			const data = document.getElementById("granularVerificationMetadataResult").value;
-			if (data == "") {
-				alert("Please load some data into the textarea to store to solid");
-				return;
-			}
-			const title =  document.getElementById("granularVerificationMetadataTitle").value;
-			if (title == "") {
-				alert("Please give this dataset a title to use in Solid");
-				return;
-			}
-
-			let filename = title.replace(/[^\-a-z0-9]/gi, '_').toLowerCase();
-			filename = filename+'.jsonld';
-			const pathToStore = document.getElementById("PodURL").value+filename;
-			const filetype = 'text/plain'; // must be this or fails - no idea why
-			const blob = new Blob([data], { type: filetype });
-			const file = new File([blob], filename, { type: filetype });
-
-			const fileurl = await Inrupt.writeFileToPod(file, pathToStore);
-
-			document.getElementById("granularVerificationMetadataSolidURLResult").innerHTML = fileurl;
-		} catch (error) {
-			console.log(error);
-			alert(error.message);
-		}
-	};
-
-	/** Tab to Validate with anchored metadata **/
-
-	const readValidateRDFInputButton = document.querySelector("#readValidateRDFInputButton");
-	readValidateRDFInputButton.onclick = async function() {
-		const fileURL = document.getElementById("validateRDFInputURL").value;
-		const file = await Inrupt.readFileFromPod(fileURL);
-		let reader = new FileReader();
-		reader.readAsText(file);
-		reader.onload = function() {
-			const inputarea = document.getElementById('validateRDFInputArea');
-			inputarea.value = reader.result;
-		};
-	}
-
-	const readAnchoredMetadataValidationButton = document.querySelector("#readAnchoredMetadataValidationButton");
-	readAnchoredMetadataValidationButton.onclick = async function() {
-		const fileURL = document.getElementById("validateAnchoredMetadataInputURL").value;
-		const file = await Inrupt.readFileFromPod(fileURL);
-
-		let reader = new FileReader();
-		reader.readAsText(file);
-		reader.onload = function() {
-			const inputarea = document.getElementById('anchoredMetadataValidationInputArea');
-			inputarea.value = reader.result;
-		};
-	}
-
-	/** Tab to Validate with Granular metadata **/
-
-	const readValidateGranularRDFInputButton = document.querySelector("#readValidateGranularRDFInputButton");
-	readValidateGranularRDFInputButton.onclick = async function() {
-		const fileURL = document.getElementById("validateGranularRDFInputURL").value;
-		const file = await Inrupt.readFileFromPod(fileURL);
-
-		let reader = new FileReader();
-		reader.readAsText(file);
-		reader.onload = function() {
-			const inputarea = document.getElementById('validateGranularRDFInputArea');
-			inputarea.value = reader.result;
-		};
-	}
-
-
-	const readGranularMetadataValidationButton = document.querySelector("#readGranularMetadataValidationButton");
-	readGranularMetadataValidationButton.onclick = async function() {
-		const fileURL = document.getElementById("validateGranularMetadataInputURL").value;
-		const file = await Inrupt.readFileFromPod(fileURL);
-
-		let reader = new FileReader();
-		reader.readAsText(file);
-		reader.onload = function() {
-			const inputarea = document.getElementById('granularMetadataValidationInputArea');
-			inputarea.value = reader.result;
-		};
 	}
 }

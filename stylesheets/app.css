@@ -197,3 +197,11 @@ body {
 .buttonlinkchain:hover {
 	background-color: #598cde;
 }
+
+.arrow {
+	font-size:18pt;
+	font-weight:bold; 
+	font-family: 'Arial'; 
+	line-height: 26px; 
+	height: 26px;
+}
