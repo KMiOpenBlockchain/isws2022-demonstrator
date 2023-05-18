@@ -76,28 +76,35 @@
 					</div>
 
 					<div class="panel" style="clear:both; float: left;margin-top:20px;">
-						<h3>Connect to Solid (https://broker.pod.inrupt.com)</h3>
-						<br />
-						<button class="buttonsolid" name="solidLoginButton" id="solidLoginButton">Connect to Solid</button>
-						<label for="solidpod">Solid Web ID: </label>
-						<label id="solidpod"></label>
-						<br /><br />
-						<button class="buttonsolid" name="solidLogoutButton" id="solidLogoutButton">Logout of Solid</button>
+						<h3 style="margin-top:0px;">Connect to Solid <span style="font-weight:normal;font-size:10pt">(optional - only if you want to store data to Solid)</span></h3>
 
-						<br /><br />
-						<h3>Specify the Solid Folder to store data to</h3>
-						<br />
-						<label id="podlabel" for="PodURL">Solid Pod Storage Folder URL: </label>
-						<input type="url" id="PodURL" name="PodURL"  size="100" pattern="https://.*" placeholder="e.g., https://pod.inrupt.com/<username>/ISWS/"> must end in a '/'
+						<div style="clear:both;float:left;">
+							<label id="oidcIssuerlabel" for="oidcIssuer">Your OpenID Connect Solid Issuer URL: </label>
+							<input type="url" id="oidcIssuer" name="oidcIssuer"  size="60" pattern="https://.*">
+							<button class="buttonsolid" name="solidLoginButton" id="solidLoginButton">Connect to Solid</button>
+						</div>
 
-						<br /><br />
-						<button class="buttonsolid" disabled="true" name="readFileFromSolidButton" id="readFileFromSolidButton">Read Files from Solid</button>
+						<div style="clear:both;float:left; margin-top:10px" >
+							<label for="solidpod">Solid Web ID: </label>
+							<label id="solidpod" style="font-weight:bold"></label>
+							<button class="buttonsolid" disabled="true" name="solidLogoutButton" id="solidLogoutButton">Disconnect from Solid</button>
+						</div>
 
-						<br /><br />
-						<label for="fileoftriples">Existing Files</label>
-						<br />
-						<textarea name="filesArea" id="filesArea" class="textareastylebig"></textarea>
-						<br /><br />
+						<div style="clear:both;float:left; margin-top:20px">
+							<h4>Specify the Solid Folder to store data to</h4>
+							<br />
+							<label id="podlabel" for="PodURL">Solid Pod Storage Folder URL: </label>
+							<input type="url" id="PodURL" name="PodURL"  size="100" pattern="https://.*" placeholder="e.g., https://pod.inrupt.com/<username>/ISWS/"> must end in a '/'
+
+							<br /><br />
+							<button class="buttonsolid" disabled="true" name="readFileFromSolidButton" id="readFileFromSolidButton">Read Files from Solid</button>
+
+							<br /><br />
+							<label for="fileoftriples">Existing Files</label>
+							<br />
+							<textarea name="filesArea" id="filesArea" class="textareastylebig"></textarea>
+						</div>
+
 					</div>
 				</div>
 

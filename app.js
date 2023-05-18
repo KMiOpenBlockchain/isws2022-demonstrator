@@ -23,8 +23,6 @@
 *                                                                                *
 **********************************************************************************/
 
-let web3 = {};
-
 let quadsFinal = "";
 let metadata = ""
 let metadata2 = ""
@@ -282,7 +280,12 @@ async function initLinkchain() {
 
 	const solidLoginButton = document.querySelector("#solidLoginButton");
 	solidLoginButton.onclick = function() {
-		Inrupt.startSolidLogin();
+		const oidcIssuerUrl = document.getElementById("oidcIssuer").value;
+		if (oidcIssuerUrl == null || oidcIssuerUrl == "") {
+			alert("Please add the url of where to login to your Solid pod");
+		} else {
+			Inrupt.startSolidLogin(oidcIssuerUrl, "ISWS Summer School Demo - 2022");
+		}
 	};
 
 	const solidLogoutButton = document.querySelector("#solidLogoutButton");
@@ -317,13 +320,12 @@ async function initLinkchain() {
 	readSolidDataButton.onclick = async function() {
 		const fileURL = document.getElementById("solidFileURL").value;
 		const file = await Inrupt.readFileFromPod(fileURL);
-
 		//console.log(file);
 
 		let reader = new FileReader();
 		reader.readAsText(file);
 		reader.onload = function() {
-			console.log(reader.result);
+			//console.log(reader.result);
 			const inputarea = document.getElementById('inputarea');
 			inputarea.value = reader.result;
 		};
