@@ -1,421 +1,428 @@
 <!DOCTYPE html>
-<html>
+<html lang = "en">
 
 <head>
 
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name = "viewport" content = "width=device-width, initial-scale=1">
 
 	<title>Linkchains Solid/Token Demo</title>
-
-	<link href="./stylesheets/app.css" rel='stylesheet' type='text/css'>
 
 	<script type="text/javascript" defer src="./config.js"></script>
 	<script type="text/javascript" defer src="./lib/linkchains-bundle.js"></script>
 	<script type="text/javascript" defer src="./lib/inruptlib.js" ></script>
 	<script type="text/javascript" defer src="./app.js"></script>
-	<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.2.0/ethers.umd.min.js" type="application/javascript"></script>
 
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet">
+	<link type='text/css' href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link type='text/css' href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet">
+	
+	<link type='text/css' href="/main.css" rel='stylesheet'>
+	<link type='text/css' href="./stylesheets/app.css" rel='stylesheet'>
+
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script src="https://www.w3schools.com/lib/w3.js"></script>			
 </head>
 
 <body onload="initLinkchain();">
-
-<div id="title_head">
-	<span id="headlogo"><a href="https://instituteofcoding.open.ac.uk/" title="Open University Institute of Coding project website"><img alt="Institute of Coding logo" src="./images/ioclogo_forwhiteback.png" width="232px" /></a></span>
-	<span class="headlinks"><a href="https://blockchain7.kmi.open.ac.uk/rdf/events/isws2022">ISWS 2022 Home</a></span>
-	<span class="headimg" /><span class="headlinks"><a href="https://blockchain7.kmi.open.ac.uk/movies/movies/iswssummerschooldemo.mp4" target="_blank">Intro Movie</a></span>
-</div>
-
-	<div class="holder">
-		<h2>ISWS Summer School 2022 - Demonstrator</h2>
-
-		<div class="innerholder" style="padding-top:20px;">
-
-			<ul class="nav nav-tabs" id="thedemotabs">
-				<li class="nav-item">
-					<a href="#connect" class="nav-link active" data-bs-toggle="pill" onclick="tabClick();">1. Connect <!--span class="arrow">→</span--></a>
-				</li>
-				<li class="nav-item">
-					<a href="#metadata" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">2. Create Metadata</span></a>
-				</li>
-				<li class="nav-item">
-					<a href="#anchor" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">3a. Anchor Metadata with MerQL Contract </a>
-				</li>
-				<li class="nav-item">
-					<a href="#anchortoken" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">3b. Anchor Metadata with Token</a>
-				</li>
-				<li class="nav-item">
-					<a href="#granular" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">4. Granular Metadata</a>
-				</li>
-				<li class="nav-item">
-					<a href="#validate" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">5. Validate</a>
-				</li>
-				<li class="nav-item">
-					<a href="#validategranular" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">6. Validate Granular</a>
-				</li>
-				<li class="nav-item">
-					<a href="#testing" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">Admin</a>
-				</li>
-			</ul>
-
-			<div class="tab-content">
-
-				<div class="tab-pane fade show active" id="connect">
-					<div class="panel" style="clear:both; float: left;margin-top:20px;">
-						<h3>Connect to MetaMask (Select a Test Network)</h3>
-						<br />
-						<button class="buttonmetamask" name="enableEthereumButton" id="enableEthereumButton" disabled="false">Connect to MetaMask</button>
-						<label for="ethereumaccount">Ethereum Account: </label>
-						<label id="ethereumaccount"></label>
-						</br />
-					</div>
-
-					<div class="panel" style="clear:both; float: left;margin-top:20px;">
-						<h3 style="margin-top:0px;">Connect to Solid <span style="font-weight:normal;font-size:10pt">(optional - only if you want to store data to Solid)</span></h3>
-
-						<div style="clear:both;float:left;">
-							<label id="oidcIssuerlabel" for="oidcIssuer">Your OpenID Connect Solid Issuer URL: </label>
-							<input type="url" id="oidcIssuer" name="oidcIssuer"  size="60" pattern="https://.*">
-							<button class="buttonsolid" name="solidLoginButton" id="solidLoginButton">Connect to Solid</button>
-						</div>
-
-						<div style="clear:both;float:left; margin-top:10px" >
-							<label for="solidpod">Solid Web ID: </label>
-							<label id="solidpod" style="font-weight:bold"></label>
-							<button class="buttonsolid" disabled="true" name="solidLogoutButton" id="solidLogoutButton">Disconnect from Solid</button>
-						</div>
-
-						<div style="clear:both;float:left; margin-top:20px">
-							<h4>Specify the Solid Folder to store data to</h4>
-							<br />
-							<label id="podlabel" for="PodURL">Solid Pod Storage Folder URL: </label>
-							<input type="url" id="PodURL" name="PodURL"  size="100" pattern="https://.*" placeholder="e.g., https://pod.inrupt.com/<username>/ISWS/"> must end in a '/'
-
-							<br /><br />
-							<button class="buttonsolid" disabled="true" name="readFileFromSolidButton" id="readFileFromSolidButton">Read Files from Solid</button>
-
-							<br /><br />
-							<label for="fileoftriples">Existing Files</label>
-							<br />
-							<textarea name="filesArea" id="filesArea" class="textareastylebig"></textarea>
-						</div>
-
-					</div>
-				</div>
-
-				<div class="tab-pane fade" id="metadata">
-					<div class="panel" style="clear:both; float: left;margin-top:20px;">
-						<h3>Get Verification Metadata for some RDF Input</h3>
-						<br/>
-						<label for="fileoftriples">Choose a file of RDF:</label>   <input type="file" id="fileoftriples" name="fileoftriples">
-						<button class="button" id="readFileDataButton" name="readFileDataButton">Read File</button>
-						<button class="buttonsolid" id="saveFileDataButton" name="saveFileDataButton" disabled="true" title="If the file of the same name already exists, it will be over written">Save File To Solid</button>
-						<br /><br />
-						OR
-						<label id="filelabel" for="FileURL">Enter a Solid file URL:</label>
-						<input type="text" id="solidFileURL" name="solidFileURL"  size="100" pattern="https://.*" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-file">
-						<button class="buttonsolid" disabled="true" name="readSolidDataButton" id="readSolidDataButton">Read File from Solid</button>
-
-						<br /><br />
-						<label for="inputarea">RDF Input</label>
-						<br />
-						<textarea name="inputarea" id="inputarea" class="textareastyle"></textarea>
-						<br /><br />
-
-						<button class="buttonlinkchain" id="verificationMetadataButton" name="verificationMetadataButton">Get Verification Metadata for RDF Input</button>
-						<br /><br />
-
-						<label>Verification Metadata</label>
-						<br />
-						<textarea id="verificationMetadataResult" class="textareastyle"></textarea>
-						<br /><br />
-						<label id="verificationMetadataTitleLabel" for="verificationMetadataTitle">URL:&nbsp;</label><span id="verificationMetadataStub"><span style="color:gray">Please add Solid Pod URL on tab 1</span></span>
-						<input type="" id="verificationMetadataTitle" name="verificationMetadataTitle"  size="30" placeholder="filename" title="The filename for this data when stored in Solid. It will have .nq appended"><b>.jsonld</b>&nbsp;
-						<button class="buttonsolid" id="storeVerificationMetadataButton" name="storeVerificationMetadataButton" disabled="true" title="If the file of the same name already exists, it will be over written">Store Verification Metadata on Solid</button><br />
-
-						<label id="verificationMetadataSolidURL" for="verificationMetadataSolidURLResult">Solid URL:</label>
-						<label id="verificationMetadataSolidURLResult" for="verificationMetadataSolidURLResult"></label>
-						<br /><br />
-
-						OR
-						<button class="buttonsolid" id="storeLocallyVerificationMetadataButton" name="storeLocallyVerificationMetadataButton"  title="Store the verification Metadata to a local file">Store Verification Metadata Locally</button><br />
-						<br /><br />
-					</div>
-				</div>
-
-				<div class="tab-pane fade" id="anchor">
-					<div class="panel" style="clear:both; float: left;margin-top:20px;">
-						<h3>Anchor Verification Metadata to the Blockchain with a MerQLAnchor Contract</h3>
-						<br />
-						<label for="verificationMetadataFile">Choose a file of Verification Metadata:</label>   <input type="file" id="verificationMetadataFile" name="verificationMetadataFile">
-						<button class="button" id="readVerificationMetadataFileButton" name="readVerificationMetadataFileButton">Read File</button>
-						<button class="buttonsolid" id="saveVerificationMetadataFileButton" name="saveVerificationMetadataFileButton" disabled="true" title="If the file of the same name already exists, it will be over written">Save File To Solid</button>
-						<br /><br />
-						OR
-						<label id="verificationMetadataInputLabel" for="verificationMetadataInputURL">Enter a Solid file URL:</label>
-						<input type="text" id="verificationMetadataInputURL" name="verificationMetadataInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-metadata">
-						<button class="buttonsolid" disabled="true" name="readVerificationMetadataButton" id="readVerificationMetadataButton">Read File from Solid</button>
-
-						<br /><br />
-						<label for="verificationMetadataInputArea">Verification Metadata</label>
-						<br />
-						<textarea name="verificationMetadataInputArea" id="verificationMetadataInputArea" class="textareastyle"></textarea>
-						<br /><br />
-						<button class="buttonmetamask" id="anchorMetadataButton" disabled="true">Anchor Verification Metadata to Blockchain</button>
-						<br /><br />
-						<label>Anchored Verification Metadata</label>
-						<br />
-						<textarea id="anchorMetadataResult" class="textareastyle"></textarea>
-						<br /><br />
-						<label id="anchorMetadataTitleLabel" for="anchorMetadataTitle">URL:&nbsp;</label><span id="anchorMetadataStub"><span style="color:gray">Please add Solid Pod URL on tab 1</span></span>
-						<input type="" id="anchorMetadataTitle" name="verificationMetadataTitle"  size="30" placeholder="filename" title="The filename for this data when stored in Solid. It will have .nq appended"><b>.jsonld</b>&nbsp;
-						<button class="buttonsolid" id="storeAnchorMetadataButton" name="storeAnchorMetadataButton" disabled="true" title="If the file of the same name already exists, it will be over written">Store Anchored Verification Metadata on Solid</button><br />
-
-						<label id="anchorMetadataSolidURL" for="anchorMetadataSolidURLResult">Solid URL:</label>
-						<label id="anchorMetadataSolidURLResult" for="anchorMetadataSolidURLResult"></label>
-						<br /><br />
-
-						OR
-						<button class="buttonsolid" id="storeLocallyAnchorMetadataButton" name="storeLocallyAnchorMetadataButton" title="Store the anchored verification Metadata to a local file">Store Anchored Verification Metadata Locally</button><br />
-						<br /><br />
-					</div>
-				</div>
-
-				<div class="tab-pane fade" id="anchortoken">
-					<div class="panel" style="clear:both; float: left;margin-top:20px;">
-						<h3>Anchor Verification Metadata to the Blockchain with an RDF Token</h3>
-						<br />
-						<label for="verificationMetadataTokenFileToken">Choose a file of Verification Metadata:</label>   <input type="file" id="verificationMetadataTokenFile" name="verificationMetadataTokenFile">
-						<button class="button" id="readVerificationMetadataTokenFileButton" name="readVerificationMetadataTokenFileButton">Read File</button>
-						<button class="buttonsolid" id="saveVerificationMetadataTokenFileButton" name="saveVerificationMetadataTokenFileButton" disabled="true" title="If the file of the same name already exists, it will be over written">Save File To Solid</button>
-						<br /><br />
-						OR
-						<label id="verificationMetadataTokenInputLabel" for="verificationMetadataTokenInputURL">Enter a Solid file URL:</label>
-						<input type="text" id="verificationMetadataTokenInputURL" name="verificationMetadataTokenInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-metadata">
-						<button class="buttonsolid" disabled="true" name="readVerificationMetadataTokenButton" id="readVerificationMetadataTokenButton">Read File from Solid</button>
-
-						<br /><br />
-						<label for="verificationmetadataTokeninputarea">Verification Metadata</label>
-						<br />
-						<textarea name="verificationMetadataTokenInputArea" id="verificationMetadataTokenInputArea" class="textareastyle"></textarea>
-						<br /><br />
-
-
-						<p>
-						Each Non-Fungible token represents a unique asset. In this instance a set of RDF data.
-						Each token needs a name, desciption and token image to represent that unique asset.
-						Please enter the details below to issue a token to represent this RDF
-						</p>
-
-						<label for="tokenName">Token Name to represent the RDF Dataset you are anchoring:</label><br />
-						<input type="text" id="tokenName" name="tokenName" size="100" "A name for this RDF dataset">
-						<br /><br />
-						<label for="tokenDescription">Token Description to represent the RDF Dataset you are anchoring:</label><br />
-						<textarea class="textareastyle" id="tokenDescription" name="tokenDescription" title="A description for this RDF Data set"></textarea>
-						<br /><br />
-						<label for="tokenImageURL">Token Image URL to represent the RDF Dataset you are anchoring:</label><br />
-						<input type="text" id="tokenImageURL" name="tokenImageURL" size="100" title="A url to an image for this RDF dataset Token - We prefill with a default one for you, so this is optional to add" />
-						<br /><br /><br />
-
-						<label for="networks">Which token Contract?</label>
-						<select name="networks" id="networks">
-						</select>
-
-						<br /><br /><br />
-
-						<button class="buttonmetamask" id="anchorMetadataTokenButton" disabled="true">Anchor Verification Metadata to Blockchain</button>
-						<br /><br />
-						<label>Anchored Verification Metadata</label>
-						<br />
-						<textarea id="anchorMetadataTokenResult" class="textareastyle"></textarea>
-						<br /><br />
-						<label id="anchorMetadataTokenTitleLabel" for="anchorMetadataTokenTitle">URL:&nbsp;</label><span id="anchorMetadataTokenStub"><span style="color:gray">Please add Solid Pod URL on tab 1</span></span>
-						<input type="" id="anchorMetadataTokenTitle" name="verificationMetadataTokenTitle"  size="30" placeholder="filename" title="The filename for this data when stored in Solid. It will have .nq appended"><b>.jsonld</b>&nbsp;
-						<button class="buttonsolid" id="storeAnchorMetadataTokenButton" name="storeAnchorMetadataTokenButton" disabled="true" title="If the file of the same name already exists, it will be over written">Store Anchored Verification Metadata on Solid</button><br />
-
-						<label id="anchorMetadataTokenSolidURL" for="anchorMetadataTokenSolidURLResult">Solid URL:</label>
-						<label id="anchorMetadataTokenSolidURLResult" for="anchorMetadataTokenSolidURLResult"></label>
-						<br /><br />
-
-						OR
-						<button class="buttonsolid" id="storeLocallyAnchorMetadataTokenButton" name="storeLocallyAnchorMetadataTokenButton" title="Store the anchored verification Metadata to a local file">Store Anchored Verification Metadata Locally</button><br />
-						<br /><br />
-					</div>
-				</div>
-
-				<div class="tab-pane fade" id="granular">
-					<div class="panel" style="clear:both; float: left;margin-top:20px;">
-						<h3>Get Granular Metadata to allow per triple/quad verification</h3>
-
-						<br />
-						<label for="granularRDFInputFile">Choose a file of RDF:</label>   <input type="file" id="granularRDFInputFile" name="granularRDFInputFile">
-						<button class="button" id="granularRDFInputFileButton" name="granularRDFInputFileButton">Read File</button>
-						<br />
-						OR
-						<br />
-						<label id="anchoredRDFInputLabel" for="anchoredRDFInputURL">Solid URL to RDF Data:</label>
-						<input type="" id="anchoredRDFInputURL" name="anchoredRDFInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-rdf" title="defaults to RDF Input box content">
-						<button class="buttonsolid" disabled="true" name="readAnchoredRDFInputButton" id="readAnchoredRDFInputButton">Read File from Solid</button>
-
-						<br /><br />
-						<label for="anchoredRDFInputArea">RDF Input</label>
-						<br />
-						<textarea name="anchoredRDFInputArea" id="anchoredRDFInputArea" class="textareastyle"></textarea>
-
-						<br /><br />
-						<label for="anchoredMetadataInputAreaFile">Choose a file of RDF:</label>   <input type="file" id="anchoredMetadataInputAreaFile" name="anchoredMetadataInputAreaFile">
-						<button class="button" id="anchoredMetadataInputAreaButton" name="anchoredMetadataInputAreaButton">Read File</button>
-						<br />
-						OR
-						<br />
-						<label id="anchoredMetadataInputLabel" for="anchoredMetadataInputURL">Solid URL to Anchored Metadata:</label>
-						<input type="text" id="anchoredMetadataInputURL" name="anchoredMetadataInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-achored-metadata" title="defaults to Anchored Metadata box content">
-						<button class="buttonsolid" disabled="true" name="readAnchoredMetadataButton" id="readAnchoredMetadataButton">Read File from Solid File</button>
-
-						<br /><br />
-						<label for="anchoredMetadataInputArea">Anchored Verification Metadata</label>
-						<br />
-						<textarea name="anchoredMetadataInputArea" id="anchoredMetadataInputArea" class="textareastyle"></textarea>
-
-						<br /><br />
-						<button class="buttonlinkchain" id="granularVerificationMetadataButton">Get Granular Verification Metadata</button>
-						<br /><br />
-
-						<label>Granular Verification Metadata</label>
-						<br />
-						<textarea id="granularVerificationMetadataResult" class="textareastyle"></textarea>
-						<br /><br />
-
-						<label id="granularVerificationTitleLabel" for="granularVerificationMetadataTitle">URL:&nbsp;</label> <span id="granularVerificationMetadataStub"><span style="color:gray">Please add Solid Pod URL on tab 1</span></span>
-						<input type="" id="granularVerificationMetadataTitle" name="granularVerificationMetadataTitle" placeholder="filename" size="30" title="The filename for this data when stored in Solid. It will have .nq appended"><b>.jsonld</b>&nbsp;
-						<button class="buttonsolid" id="storeGanularMetadataButton" name="storeGanularMetadataButton" disabled="true" title="If the file of the same name already exists, it will be over written">Store Granular Verification Metadata on Solid</button><br />
-
-						<label id="granularVerificationMetadataSolidURL" for="granularVerificationMetadataSolidURLResult">Solid URL:</label>
-						<label id="granularVerificationMetadataSolidURLResult" for="granularVerificationMetadataSolidURLResult"></label>
-						<br /><br />
-
-						OR
-						<button class="buttonsolid" id="storeLocallyGanularMetadataButton" name="storeLocallyGanularMetadataButton" title="Store the granualr verification Metadata to a local file">Store Granular Verification Metadata Locally</button><br />
-						<br /><br />
-					</div>
-				</div>
-
-				<div class="tab-pane fade" id="validate">
-					<div class="panel" style="clear:both; left;margin-top:20px;">
-						<h3>Validate RDF Data - All</h3>
-						<br /><br />
-						<label for="validateRDFInputFile">Choose a file of RDF:</label>   <input type="file" id="validateRDFInputFile" name="validateRDFInputFile">
-						<button class="button" id="validateRDFInputFileButton" name="validateRDFInputFileButton">Read File</button>
-						<br />
-						OR
-						<br />
-						<label id="validateRDFInputLabel" for="validateRDFInputURL">Solid URL to RDF Data:</label>
-						<input type="text" id="validateRDFInputURL" name="validateRDFInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-rdf" title="defaults to RDF Input box content">
-						<button class="buttonsolid" disabled="true" name="readValidateRDFInputButton" id="readValidateRDFInputButton">Read File from Solid</button>
-
-						<br /><br />
-						<label for="validateRDFInputArea">RDF Input to Validate</label>
-						<br />
-						<textarea name="validateRDFInputArea" id="validateRDFInputArea" class="textareastyle"></textarea>
-
-						<br /><br />
-						<label for="validateAnchoredMetadataInputFile">Choose a file of RDF:</label>   <input type="file" id="validateAnchoredMetadataInputFile" name="validateAnchoredMetadataInputFile">
-						<button class="button" id="validateAnchoredMetadataInputFileButton" name="validateAnchoredMetadataInputFileButton">Read File</button>
-						<br />
-						OR
-						<br />
-						<label id="validateAnchoredMetadataInputLabel" for="validateAnchoredMetadataInputURL">Solid URL to Anchored Metadata:</label>
-						<input type="" id="validateAnchoredMetadataInputURL" name="avalidateAnchoredMetadataInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-achored-metadata" title="defaults to Anchored Metadata box content">
-						<button class="buttonsolid" disabled="true" name="readAnchoredMetadataValidationButton" id="readAnchoredMetadataValidationButton">Read File from Solid</button>
-
-						<br /><br />
-						<label for="anchoredMetadataValidationInputArea">RDF Input Anchored Validation Metadata</label>
-						<br />
-						<textarea name="anchoredMetadataValidationInputArea" id="anchoredMetadataValidationInputArea" class="textareastyle"></textarea>
-
-						<br /><br />
-						<button class="buttonmetamask" id="validateButton" name="validateButton" disabled="true">Validate</button>
-						<br /><br />
-						<textarea id="validateResult" name="validateResult" class="textareastyle"></textarea>
-					</div>
-				</div>
-
-				<div class="tab-pane fade" id="validategranular">
-					<div class="panel" style="clear:both; float: left;margin-top:20px;">
-						<h3>Validate RDF Data - Granular</h3>
-						<br /><br />
-						<label for="validateGranularRDFInputFile">Choose a file of RDF:</label>   <input type="file" id="validateGranularRDFInputFile" name="validateGranularRDFInputFile">
-						<button class="button" id="validateGranularRDFInputButton" name="validateGranularRDFInputButton">Read File</button>
-						<br />
-						OR
-						<br />
-						<label id="validateRDFInputLabelGanular" for="validateGranularRDFInputURL">Solid URL to RDF Data:</label>
-						<input type="" id="validateGranularRDFInputURL" name="validateGranularRDFInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-rdf" title="defaults to RDF Input box content">
-						<button class="buttonsolid" disabled="true" name="readValidateGranularRDFInputButton" id="readValidateGranularRDFInputButton">Read File from Solid</button>
-
-						<br /><br />
-						<label for="validateGranularRDFInputArea">RDF Input to Validate</label>
-						<br />
-						<textarea name="validateGranularRDFInputArea" id="validateGranularRDFInputArea" class="textareastyle"></textarea>
-
-						<br /><br />
-						<label for="granularMetadataValidationInputFile">Choose a file of RDF:</label>   <input type="file" id="granularMetadataValidationInputFile" name="granularMetadataValidationInputFile">
-						<button class="button" id="granularMetadataValidationInputButton" name="granularMetadataValidationInputButton">Read File</button>
-						<br />
-						OR
-						<br />
-						<label id="validateGranularMetadataInputLabel" for="validateGranularMetadataInputURL">Solid URL to Granular Metadata:</label>
-						<input type="" id="validateGranularMetadataInputURL" name="validateGranularMetadataInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-granular-metadata" title="defaults to Granular Verification Metadata box content">
-						<button class="buttonsolid" disabled="true" name="readGranularMetadataValidationButton" id="readGranularMetadataValidationButton">Read File from Solid</button>
-
-						<br /><br />
-						<label for="granularMetadataValidationInputArea">RDF Input Granular Validation Metadata</label>
-						<br />
-						<textarea name="granularMetadataValidationInputArea" id="granularMetadataValidationInputArea" class="textareastyle"></textarea>
-
-						<br /><br />
-						<button class="buttonmetamask" id="validateGranularButton" name="validateGranularButton" disabled="true">Validate</button>
-						<br /><br />
-						<textarea name="validateGranularResult" id="validateGranularResult" class="textareastyle"></textarea>
-					</div>
-				</div>
-
-				<div class="tab-pane fade" id="testing">
-					<div class="panel" style="clear:both; width: 100%; float: left;margin-top:20px;">
-						<h3>Admin</h3>
-						<br />
-						<button class="buttonmetamask" name="tokenContractButton" id="tokenContractButton">Publish a Token Contract Instance</button>
-						<br /><br />
-						<label for="tokenContractOutput">Response</label>
-						<br />
-						<textarea name="tokenContractOutput" id="tokenContractOutput" class="textareastyle"></textarea>
-					</div>
-				</div>
-
-			</div> <!--- end tab contents -->
-
-			<a href="#" type="button" class="btn btn-primary float-start mt-3" id="prevbtn" style="display:none;"></i> Previous</a>
-			<a href="#" type="button" class="btn btn-primary float-end mt-3" id="ntxbtn"> Next</a>
-
-			<br /><br />
-			<!-- div style="width: 100%; float:left; margin-top:20px;">
-				<button class="button" id="clearButton">Clear All Tabs and Start Again</button>
-			</div -->
+	<header>
+		<div id="title_head">
+			<span id="headlogo"><a title="Go to the ISWS 2022 website" href="http://2022.semanticwebschool.org/"><img src="./images/isws-logo.png" width="200" alt="ISWS 2022"></a></a></span>
+			<span id="headlogoright"><a title="Go to the Knowledge Media Institute website" href="http://kmi.open.ac.uk/"><img src="./images/kmi-logo.png" height="46" alt="Knowledge Media Institute"></a></span>
 		</div>
-	</div>
-	<div class="clearit" style="height:40px;"></div>
+	</header>	
+	<main>
+		<div class="holder">
+			<h1>ISWS Summer School 2022 - Demonstrator</h1>
 
-<footer id="title_footer">
-<span class="footlogos"><a href="http://www.open.ac.uk"><img src="./images/ou-logo.png" height="46" alt="The Open University" title="The Open University" /></a></span>
-<span class="footlogos"><a href="http://kmi.open.ac.uk"><img src="./images/kmi-logo.png" height="46" alt="Knowledge Media Institute" title="Knowledge Media Institute" /></a></span>
-<span class="footlogos" id="iocfoot"><a href="http://www9.open.ac.uk/mct-cc/" title="Computing and Communications"><img alt="Computing and Communications" src="./images/candc_logo.png" height="46px" /></a></span>
-<span class="title_copy">Copyright The Knowledge Media Institute <br><span class="privacy"><a href="/rdf/privacy/">privacy</a></span></span>
-</footer>
+			<div class="innerholder" style="padding-top:20px;">
+
+				<ul class="nav nav-tabs" id="thedemotabs">
+					<li class="nav-item">
+						<a href="#connect" class="nav-link active" data-bs-toggle="pill" onclick="tabClick();">1. Connect <!--span class="arrow">→</span--></a>
+					</li>
+					<li class="nav-item">
+						<a href="#metadata" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">2. Create Metadata</span></a>
+					</li>
+					<li class="nav-item">
+						<a href="#anchor" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">3a. Anchor Metadata with MerQL Contract </a>
+					</li>
+					<li class="nav-item">
+						<a href="#anchortoken" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">3b. Anchor Metadata with Token</a>
+					</li>
+					<li class="nav-item">
+						<a href="#granular" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">4. Granular Metadata</a>
+					</li>
+					<li class="nav-item">
+						<a href="#validate" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">5. Validate</a>
+					</li>
+					<li class="nav-item">
+						<a href="#validategranular" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">6. Validate Granular</a>
+					</li>
+					<li class="nav-item">
+						<a href="#testing" class="nav-link" data-bs-toggle="pill" onclick="tabClick();">Admin</a>
+					</li>
+				</ul>
+
+				<div class="tab-content">
+
+					<div class="tab-pane fade show active" id="connect">
+						<div class="panel" style="clear:both; float: left;margin-top:20px;">
+							<h2>Connect to MetaMask (Select a Test Network)</h2>
+							<br />
+							<button class="buttonmetamask" name="enableEthereumButton" id="enableEthereumButton" disabled="false">Connect to MetaMask</button>
+							<span for="ethereumaccount">Ethereum Account: </span>
+							<span id="ethereumaccount"></span>
+							<br />
+						</div>
+
+						<div class="panel" style="clear:both; float: left;margin-top:20px;">
+							<h2 style="margin-top:0px;">Connect to Solid <span style="font-weight:normal;font-size:10pt">(optional - only if you want to store data to Solid)</span></h2>
+
+							<div style="clear:both;float:left;">
+								<label id="oidcIssuerlabel" for="oidcIssuer">Your OpenID Connect Solid Issuer URL: </label>
+								<input type="url" id="oidcIssuer" name="oidcIssuer"  size="60" pattern="https://.*">
+								<button class="buttonsolid" name="solidLoginButton" id="solidLoginButton">Connect to Solid</button>
+							</div>
+
+							<div style="clear:both;float:left; margin-top:10px" >
+								<span for="solidpod">Solid Web ID: </span>
+								<span id="solidpod" style="font-weight:bold"></span>
+								<button class="buttonsolid" disabled="true" name="solidLogoutButton" id="solidLogoutButton">Disconnect from Solid</button>
+							</div>
+
+							<div style="clear:both;float:left; margin-top:20px">
+								<h3>Specify the Solid Folder to store data to</h3>
+								<br />
+								<label id="podlabel" for="PodURL">Solid Pod Storage Folder URL: </label>
+								<input type="url" id="PodURL" name="PodURL"  size="100" pattern="https://.*" placeholder="e.g., https://pod.inrupt.com/<username>/ISWS/"> must end in a '/'
+
+								<br /><br />
+								<button class="buttonsolid" disabled="true" name="readFileFromSolidButton" id="readFileFromSolidButton">Read Files from Solid</button>
+
+								<br /><br />
+								<label for="filesArea">Existing Files</label>
+								<br />
+								<textarea name="filesArea" id="filesArea" class="textareastylebig"></textarea>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="metadata">
+						<div class="panel" style="clear:both; float: left;margin-top:20px;">
+							<h2>Get Verification Metadata for some RDF Input</h2>
+							<br/>
+							<label for="fileoftriples">Choose a file of RDF:</label>   <input type="file" id="fileoftriples" name="fileoftriples">
+							<button class="button" id="readFileDataButton" name="readFileDataButton">Read File</button>
+							<button class="buttonsolid" id="saveFileDataButton" name="saveFileDataButton" disabled="true" title="If the file of the same name already exists, it will be over written">Save File To Solid</button>
+							<br /><br />
+							OR
+							<label for="solidFileURL">Enter a Solid file URL:</label>
+							<input type="text" id="solidFileURL" name="solidFileURL"  size="100" pattern="https://.*" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-file">
+							<button class="buttonsolid" disabled="true" name="readSolidDataButton" id="readSolidDataButton">Read File from Solid</button>
+
+							<br /><br />
+							<label for="inputarea">RDF Input</label>
+							<br />
+							<textarea name="inputarea" id="inputarea" class="textareastyle"></textarea>
+							<br /><br />
+
+							<button class="buttonlinkchain" id="verificationMetadataButton" name="verificationMetadataButton">Get Verification Metadata for RDF Input</button>
+							<br /><br />
+
+							<label for="verificationMetadataResult">Verification Metadata</label>
+							<br />
+							<textarea id="verificationMetadataResult" class="textareastyle"></textarea>
+							<br /><br />
+							<label id="verificationMetadataTitleLabel" for="verificationMetadataTitle">URL:&nbsp;</label><span id="verificationMetadataStub"><span style="color:gray">Please add Solid Pod URL on tab 1</span></span>
+							<input type="" id="verificationMetadataTitle" name="verificationMetadataTitle"  size="30" placeholder="filename" title="The filename for this data when stored in Solid. It will have .nq appended"><b>.jsonld</b>&nbsp;
+							<button class="buttonsolid" id="storeVerificationMetadataButton" name="storeVerificationMetadataButton" disabled="true" title="If the file of the same name already exists, it will be over written">Store Verification Metadata on Solid</button><br />
+
+							<span id="verificationMetadataSolidURL" for="verificationMetadataSolidURLResult">Solid URL:</span>
+							<span id="verificationMetadataSolidURLResult" for="verificationMetadataSolidURLResult"></span>
+							<br /><br />
+
+							OR
+							<button class="buttonsolid" id="storeLocallyVerificationMetadataButton" name="storeLocallyVerificationMetadataButton"  title="Store the verification Metadata to a local file">Store Verification Metadata Locally</button><br />
+							<br /><br />
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="anchor">
+						<div class="panel" style="clear:both; float: left;margin-top:20px;">
+							<h2>Anchor Verification Metadata to the Blockchain with a MerQLAnchor Contract</h2>
+							<br />
+							<label for="verificationMetadataFile">Choose a file of Verification Metadata:</label>   <input type="file" id="verificationMetadataFile" name="verificationMetadataFile">
+							<button class="button" id="readVerificationMetadataFileButton" name="readVerificationMetadataFileButton">Read File</button>
+							<button class="buttonsolid" id="saveVerificationMetadataFileButton" name="saveVerificationMetadataFileButton" disabled="true" title="If the file of the same name already exists, it will be over written">Save File To Solid</button>
+							<br /><br />
+							OR
+							<label id="verificationMetadataInputLabel" for="verificationMetadataInputURL">Enter a Solid file URL:</label>
+							<input type="text" id="verificationMetadataInputURL" name="verificationMetadataInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-metadata">
+							<button class="buttonsolid" disabled="true" name="readVerificationMetadataButton" id="readVerificationMetadataButton">Read File from Solid</button>
+
+							<br /><br />
+							<label for="verificationMetadataInputArea">Verification Metadata</label>
+							<br />
+							<textarea name="verificationMetadataInputArea" id="verificationMetadataInputArea" class="textareastyle"></textarea>
+							<br /><br />
+							<button class="buttonmetamask" id="anchorMetadataButton" disabled="true">Anchor Verification Metadata to Blockchain</button>
+							<br /><br />
+							<label for="anchorMetadataResult">Anchored Verification Metadata</label>
+							<br />
+							<textarea id="anchorMetadataResult" class="textareastyle"></textarea>
+							<br /><br />
+							<label id="anchorMetadataTitleLabel" for="anchorMetadataTitle">URL:&nbsp;</label><span id="anchorMetadataStub"><span style="color:gray">Please add Solid Pod URL on tab 1</span></span>
+							<input type="" id="anchorMetadataTitle" name="verificationMetadataTitle"  size="30" placeholder="filename" title="The filename for this data when stored in Solid. It will have .nq appended"><b>.jsonld</b>&nbsp;
+							<button class="buttonsolid" id="storeAnchorMetadataButton" name="storeAnchorMetadataButton" disabled="true" title="If the file of the same name already exists, it will be over written">Store Anchored Verification Metadata on Solid</button><br />
+
+							<span id="anchorMetadataSolidURL" for="anchorMetadataSolidURLResult">Solid URL:</span>
+							<span id="anchorMetadataSolidURLResult" for="anchorMetadataSolidURLResult"></span>
+							<br /><br />
+
+							OR
+							<button class="buttonsolid" id="storeLocallyAnchorMetadataButton" name="storeLocallyAnchorMetadataButton" title="Store the anchored verification Metadata to a local file">Store Anchored Verification Metadata Locally</button><br />
+							<br /><br />
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="anchortoken">
+						<div class="panel" style="clear:both; float: left;margin-top:20px;">
+							<h2>Anchor Verification Metadata to the Blockchain with an RDF Token</h2>
+							<br />
+							<label for="verificationMetadataTokenFile">Choose a file of Verification Metadata:</label>   <input type="file" id="verificationMetadataTokenFile" name="verificationMetadataTokenFile">
+							<button class="button" id="readVerificationMetadataTokenFileButton" name="readVerificationMetadataTokenFileButton">Read File</button>
+							<button class="buttonsolid" id="saveVerificationMetadataTokenFileButton" name="saveVerificationMetadataTokenFileButton" disabled="true" title="If the file of the same name already exists, it will be over written">Save File To Solid</button>
+							<br /><br />
+							OR
+							<label id="verificationMetadataTokenInputLabel" for="verificationMetadataTokenInputURL">Enter a Solid file URL:</label>
+							<input type="text" id="verificationMetadataTokenInputURL" name="verificationMetadataTokenInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-metadata">
+							<button class="buttonsolid" disabled="true" name="readVerificationMetadataTokenButton" id="readVerificationMetadataTokenButton">Read File from Solid</button>
+
+							<br /><br />
+							<label for="verificationMetadataTokenInputArea">Verification Metadata</label>
+							<br />
+							<textarea name="verificationMetadataTokenInputArea" id="verificationMetadataTokenInputArea" class="textareastyle"></textarea>
+							<br /><br />
+
+
+							<p>
+							Each Non-Fungible token represents a unique asset. In this instance a set of RDF data.
+							Each token needs a name, desciption and token image to represent that unique asset.
+							Please enter the details below to issue a token to represent this RDF
+							</p>
+
+							<label for="tokenName">Token Name to represent the RDF Dataset you are anchoring:</label><br />
+							<input type="text" id="tokenName" name="tokenName" size="100" "A name for this RDF dataset">
+							<br /><br />
+							<label for="tokenDescription">Token Description to represent the RDF Dataset you are anchoring:</label><br />
+							<textarea class="textareastyle" id="tokenDescription" name="tokenDescription" title="A description for this RDF Data set"></textarea>
+							<br /><br />
+							<label for="tokenImageURL">Token Image URL to represent the RDF Dataset you are anchoring:</label><br />
+							<input type="text" id="tokenImageURL" name="tokenImageURL" size="100" title="A url to an image for this RDF dataset Token - We prefill with a default one for you, so this is optional to add" />
+							<br /><br /><br />
+
+							<label for="networks">Which token Contract?</label>
+							<select name="networks" id="networks">
+							</select>
+
+							<br /><br /><br />
+
+							<button class="buttonmetamask" id="anchorMetadataTokenButton" disabled="true">Anchor Verification Metadata to Blockchain</button>
+							<br /><br />
+							<label for="anchorMetadataTokenResult">Anchored Verification Metadata</label>
+							<br />
+							<textarea id="anchorMetadataTokenResult" class="textareastyle"></textarea>
+							<br /><br />
+							<label id="anchorMetadataTokenTitleLabel" for="anchorMetadataTokenTitle">URL:&nbsp;</label><span id="anchorMetadataTokenStub"><span style="color:gray">Please add Solid Pod URL on tab 1</span></span>
+							<input type="" id="anchorMetadataTokenTitle" name="verificationMetadataTokenTitle"  size="30" placeholder="filename" title="The filename for this data when stored in Solid. It will have .nq appended"><b>.jsonld</b>&nbsp;
+							<button class="buttonsolid" id="storeAnchorMetadataTokenButton" name="storeAnchorMetadataTokenButton" disabled="true" title="If the file of the same name already exists, it will be over written">Store Anchored Verification Metadata on Solid</button><br />
+
+							<span id="anchorMetadataTokenSolidURL" for="anchorMetadataTokenSolidURLResult">Solid URL:</span>
+							<span id="anchorMetadataTokenSolidURLResult" for="anchorMetadataTokenSolidURLResult"></span>
+							<br /><br />
+
+							OR
+							<button class="buttonsolid" id="storeLocallyAnchorMetadataTokenButton" name="storeLocallyAnchorMetadataTokenButton" title="Store the anchored verification Metadata to a local file">Store Anchored Verification Metadata Locally</button><br />
+							<br /><br />
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="granular">
+						<div class="panel" style="clear:both; float: left;margin-top:20px;">
+							<h2>Get Granular Metadata to allow per triple/quad verification</h2>
+
+							<br />
+							<label for="granularRDFInputFile">Choose a file of RDF:</label>   <input type="file" id="granularRDFInputFile" name="granularRDFInputFile">
+							<button class="button" id="granularRDFInputFileButton" name="granularRDFInputFileButton">Read File</button>
+							<br />
+							OR
+							<br />
+							<label id="anchoredRDFInputLabel" for="anchoredRDFInputURL">Solid URL to RDF Data:</label>
+							<input type="" id="anchoredRDFInputURL" name="anchoredRDFInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-rdf" title="defaults to RDF Input box content">
+							<button class="buttonsolid" disabled="true" name="readAnchoredRDFInputButton" id="readAnchoredRDFInputButton">Read File from Solid</button>
+
+							<br /><br />
+							<label for="anchoredRDFInputArea">RDF Input</label>
+							<br />
+							<textarea name="anchoredRDFInputArea" id="anchoredRDFInputArea" class="textareastyle"></textarea>
+
+							<br /><br />
+							<label for="anchoredMetadataInputAreaFile">Choose a file of RDF:</label>   <input type="file" id="anchoredMetadataInputAreaFile" name="anchoredMetadataInputAreaFile">
+							<button class="button" id="anchoredMetadataInputAreaButton" name="anchoredMetadataInputAreaButton">Read File</button>
+							<br />
+							OR
+							<br />
+							<label id="anchoredMetadataInputLabel" for="anchoredMetadataInputURL">Solid URL to Anchored Metadata:</label>
+							<input type="text" id="anchoredMetadataInputURL" name="anchoredMetadataInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-achored-metadata" title="defaults to Anchored Metadata box content">
+							<button class="buttonsolid" disabled="true" name="readAnchoredMetadataButton" id="readAnchoredMetadataButton">Read File from Solid File</button>
+
+							<br /><br />
+							<label for="anchoredMetadataInputArea">Anchored Verification Metadata</label>
+							<br />
+							<textarea name="anchoredMetadataInputArea" id="anchoredMetadataInputArea" class="textareastyle"></textarea>
+
+							<br /><br />
+							<button class="buttonlinkchain" id="granularVerificationMetadataButton">Get Granular Verification Metadata</button>
+							<br /><br />
+
+							<label for="granularVerificationMetadataResult">Granular Verification Metadata</label>
+							<br />
+							<textarea id="granularVerificationMetadataResult" class="textareastyle"></textarea>
+							<br /><br />
+
+							<label id="granularVerificationTitleLabel" for="granularVerificationMetadataTitle">URL:&nbsp;</label> <span id="granularVerificationMetadataStub"><span style="color:gray">Please add Solid Pod URL on tab 1</span></span>
+							<input type="" id="granularVerificationMetadataTitle" name="granularVerificationMetadataTitle" placeholder="filename" size="30" title="The filename for this data when stored in Solid. It will have .nq appended"><b>.jsonld</b>&nbsp;
+							<button class="buttonsolid" id="storeGanularMetadataButton" name="storeGanularMetadataButton" disabled="true" title="If the file of the same name already exists, it will be over written">Store Granular Verification Metadata on Solid</button><br />
+
+							<span id="granularVerificationMetadataSolidURL" for="granularVerificationMetadataSolidURLResult">Solid URL:</span>
+							<span id="granularVerificationMetadataSolidURLResult" for="granularVerificationMetadataSolidURLResult"></span>
+							<br /><br />
+
+							OR
+							<button class="buttonsolid" id="storeLocallyGanularMetadataButton" name="storeLocallyGanularMetadataButton" title="Store the granualr verification Metadata to a local file">Store Granular Verification Metadata Locally</button><br />
+							<br /><br />
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="validate">
+						<div class="panel" style="clear:both; left;margin-top:20px;">
+							<h2>Validate RDF Data - All</h2>
+							<br /><br />
+							<label for="validateRDFInputFile">Choose a file of RDF:</label>   <input type="file" id="validateRDFInputFile" name="validateRDFInputFile">
+							<button class="button" id="validateRDFInputFileButton" name="validateRDFInputFileButton">Read File</button>
+							<br />
+							OR
+							<br />
+							<label id="validateRDFInputLabel" for="validateRDFInputURL">Solid URL to RDF Data:</label>
+							<input type="text" id="validateRDFInputURL" name="validateRDFInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-rdf" title="defaults to RDF Input box content">
+							<button class="buttonsolid" disabled="true" name="readValidateRDFInputButton" id="readValidateRDFInputButton">Read File from Solid</button>
+
+							<br /><br />
+							<label for="validateRDFInputArea">RDF Input to Validate</label>
+							<br />
+							<textarea name="validateRDFInputArea" id="validateRDFInputArea" class="textareastyle"></textarea>
+
+							<br /><br />
+							<label for="validateAnchoredMetadataInputFile">Choose a file of RDF:</label>   <input type="file" id="validateAnchoredMetadataInputFile" name="validateAnchoredMetadataInputFile">
+							<button class="button" id="validateAnchoredMetadataInputFileButton" name="validateAnchoredMetadataInputFileButton">Read File</button>
+							<br />
+							OR
+							<br />
+							<label id="validateAnchoredMetadataInputLabel" for="validateAnchoredMetadataInputURL">Solid URL to Anchored Metadata:</label>
+							<input type="" id="validateAnchoredMetadataInputURL" name="avalidateAnchoredMetadataInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-achored-metadata" title="defaults to Anchored Metadata box content">
+							<button class="buttonsolid" disabled="true" name="readAnchoredMetadataValidationButton" id="readAnchoredMetadataValidationButton">Read File from Solid</button>
+
+							<br /><br />
+							<label for="anchoredMetadataValidationInputArea">RDF Input Anchored Validation Metadata</label>
+							<br />
+							<textarea name="anchoredMetadataValidationInputArea" id="anchoredMetadataValidationInputArea" class="textareastyle"></textarea>
+
+							<br /><br />
+							<button class="buttonmetamask" id="validateButton" name="validateButton" disabled="true">Validate</button>
+							<br /><br />
+							<label for="validateResult">Validation Results</label>
+							<br />							
+							<textarea id="validateResult" name="validateResult" class="textareastyle"></textarea>
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="validategranular">
+						<div class="panel" style="clear:both; float: left;margin-top:20px;">
+							<h2>Validate RDF Data - Granular</h2>
+							<br /><br />
+							<label for="validateGranularRDFInputFile">Choose a file of RDF:</label>   <input type="file" id="validateGranularRDFInputFile" name="validateGranularRDFInputFile">
+							<button class="button" id="validateGranularRDFInputButton" name="validateGranularRDFInputButton">Read File</button>
+							<br />
+							OR
+							<br />
+							<label id="validateRDFInputLabelGanular" for="validateGranularRDFInputURL">Solid URL to RDF Data:</label>
+							<input type="" id="validateGranularRDFInputURL" name="validateGranularRDFInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-rdf" title="defaults to RDF Input box content">
+							<button class="buttonsolid" disabled="true" name="readValidateGranularRDFInputButton" id="readValidateGranularRDFInputButton">Read File from Solid</button>
+
+							<br /><br />
+							<label for="validateGranularRDFInputArea">RDF Input to Validate</label>
+							<br />
+							<textarea name="validateGranularRDFInputArea" id="validateGranularRDFInputArea" class="textareastyle"></textarea>
+
+							<br /><br />
+							<label for="granularMetadataValidationInputFile">Choose a file of RDF:</label>   <input type="file" id="granularMetadataValidationInputFile" name="granularMetadataValidationInputFile">
+							<button class="button" id="granularMetadataValidationInputButton" name="granularMetadataValidationInputButton">Read File</button>
+							<br />
+							OR
+							<br />
+							<label id="validateGranularMetadataInputLabel" for="validateGranularMetadataInputURL">Solid URL to Granular Metadata:</label>
+							<input type="" id="validateGranularMetadataInputURL" name="validateGranularMetadataInputURL" size="100" placeholder="e.g., https://pod.inrupt.com/<username>/path-to-granular-metadata" title="defaults to Granular Verification Metadata box content">
+							<button class="buttonsolid" disabled="true" name="readGranularMetadataValidationButton" id="readGranularMetadataValidationButton">Read File from Solid</button>
+
+							<br /><br />
+							<label for="granularMetadataValidationInputArea">RDF Input Granular Validation Metadata</label>
+							<br />
+							<textarea name="granularMetadataValidationInputArea" id="granularMetadataValidationInputArea" class="textareastyle"></textarea>
+
+							<br /><br />
+							<button class="buttonmetamask" id="validateGranularButton" name="validateGranularButton" disabled="true">Validate</button>
+							<br /><br />
+							<label for="validateGranularResult">Granular Validation Results</label>
+							<br />								
+							<textarea name="validateGranularResult" id="validateGranularResult" class="textareastyle"></textarea>
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="testing">
+						<div class="panel" style="clear:both; width: 100%; float: left;margin-top:20px;">
+							<h2>Admin</h2>
+							<br />
+							<button class="buttonmetamask" name="tokenContractButton" id="tokenContractButton">Publish a Token Contract Instance</button>
+							<br /><br />
+							<label for="tokenContractOutput">Response</label>
+							<br />
+							<textarea name="tokenContractOutput" id="tokenContractOutput" class="textareastyle"></textarea>
+						</div>
+					</div>
+
+				</div> <!--- end tab contents -->
+
+				<a href="#" type="button" class="btn btn-primary float-start mt-3" id="prevbtn" style="display:none;"></i> Previous</a>
+				<a href="#" type="button" class="btn btn-primary float-end mt-3" id="ntxbtn"> Next</a>
+
+				<br /><br />
+				<!-- div style="width: 100%; float:left; margin-top:20px;">
+					<button class="button" id="clearButton">Clear All Tabs and Start Again</button>
+				</div -->
+			</div>
+		</div>
+	</main>
+
+	<div w3-include-html="/footer.html"></div>
+
+	<!-- Cookie Banner -->
+	<script>w3.includeHTML();</script>
+	<script src="/cookiebanner.js"></script>	
 
 </body>
 

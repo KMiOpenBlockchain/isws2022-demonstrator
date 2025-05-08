@@ -1,10 +1,23 @@
+
+html.wait, html.wait * { cursor: wait !important; }
+
 body {
 	font-family: Arial, sans-serif;
-	background: #449dc0; /*#449dc0*/
-    	background-repeat:no-repeat;
 	border: 0;
 	height: 100%;
 	margin: 0 0 40px; /* bottom = footer height */
+}
+
+h1 {
+	font-size: 1.5em;
+}
+
+h2 {
+	font-size: 1.25em;
+}
+
+h3 {
+	font-size: 1.1em;
 }
 
 .container {
@@ -46,7 +59,15 @@ body {
 .headlinks {
 	display: block;
 	margin-top: 45px;
-	margin-left: 40px;
+	margin-right: 40px;
+	bottom: 0;
+	float: right;
+	font: 0.9em helvetica, sans-serif;
+}
+
+#headlinks {
+	display: block;
+	margin-top: 5px;
 	bottom: 0;
 	float: right;
 	font: 0.9em helvetica, sans-serif;
@@ -57,38 +78,7 @@ body {
 }
 #headlogoright {
 	float: right;
-	margin-right: 40px;
-	margin-top: -5px;
-}
-
-.privacy {
-	display: block;
-	margin-top: 8px;	
-}
-.privacy a {
-	font: 1.2em arial, helvetica, sans-serif;
-	background-color: #686868;
-	padding: 0px 5px 2px 5px;
-	border-radius: 4px;
-	color: rgba(255,255,255,0.8);
-
-}
-#title_footer {
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	height: 85px; /* check #content-wrap padding-bottom if change value */
-	background-color: white;
-	font: 1em helvetica, sans-serif;
-	color: #0b2637;
-	padding-top: 20px;
-	box-sizing: border-box;
-	border-top: 1px solid #ccc;
-	box-shadow: 0px -5px 5px rgba(0,0,0,0.2);
-}
-.footlogos {
-	float: right;
-	margin-right: 30px;
+	margin-top: 8px;
 }
 .title_copy {
 	display: block;
@@ -116,24 +106,6 @@ body {
 	padding-top:20px;
  	padding-bottom: 105px;	
 }
-
-
-/*
-.holder {
-	display: block;
-	margin-right: auto;
-	margin-left: auto;
-	padding:20px;
-	height: 1024px;
-	border: 0;
-	box-sizing: border-box;
-}
-
-.innerholder {
-	position: relative;
-	height: 1024px;
-}
-*/
 
 .panel {
 	background: #dee6f2; /* For browsers that do not support gradients */
