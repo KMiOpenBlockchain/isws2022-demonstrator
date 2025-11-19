@@ -19,7 +19,7 @@
 	<link type='text/css' href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link type='text/css' href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet">
 	
-	<link type='text/css' href="/main.css" rel='stylesheet'>
+	<link type='text/css' href="./stylesheets/main.css" rel='stylesheet'>
 	<link type='text/css' href="./stylesheets/app.css" rel='stylesheet'>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -28,14 +28,9 @@
 </head>
 
 <body onload="initLinkchain();">
-	<header>
-		<div id="title_head">
-			<span id="headlogo"><a title="Go to the ISWS 2022 website" href="http://2022.semanticwebschool.org/"><img src="./images/isws-logo.png" width="200" alt="ISWS 2022"></a></a></span>
-			<span id="headlogoright"><a title="Go to the Knowledge Media Institute website" href="http://kmi.open.ac.uk/"><img src="./images/kmi-logo.png" height="46" alt="Knowledge Media Institute"></a></span>
-		</div>
-	</header>	
+	<div w3-include-html="header.html"></div>
 	<main>
-		<div class="holder">
+		<div class="holder" style="padding-top:20px;">
 			<h1>ISWS Summer School 2022 - Demonstrator</h1>
 
 			<div class="innerholder" style="padding-top:20px;">

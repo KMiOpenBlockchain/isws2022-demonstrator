@@ -1,5 +1,10 @@
 # RDF Dataset verification using Linkchain, Ethereum and Solid
- 
+
+> **Note to developers:**
+> The accessibility and privacy statements included in this codebase were relevant only when the site was hosted at The Open University (OU). They are retained here for **historical completeness** and to allow rehosting at the OU if required.  
+> The statements do not apply when hosted outside the OU environment and would need updating if this site was hosted elsewhere.
+
+
  Contents
  --------
  
